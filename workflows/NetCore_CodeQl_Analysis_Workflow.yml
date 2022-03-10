@@ -3,19 +3,18 @@ name: NetCore CodeQl Analysis Workflow
 on:
   workflow_call:
     inputs:
-      env:
-        projectname:
-          required: true
-          type: string
-        nuget_feed_name:
-          required: true
-          type: string
-        nuget_feed_source:
-          required: true
-          type: string
-        nuget_config:
-          required: true
-          type: string
+      projectname:
+        required: true
+        type: string
+      nuget_feed_name:
+        required: true
+        type: string
+      nuget_feed_source:
+        required: true
+        type: string
+      nuget_config:
+        required: true
+        type: string
 
 jobs:
   analyze:
