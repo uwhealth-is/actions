@@ -40,16 +40,16 @@ jobs:
         languages: ${{ matrix.language }}
 
     - name: Remove existing entry from NuGet config
-      run: dotnet nuget remove source ${{ env.nuget_feed_name }} --configfile ${{ env.nuget_config }}
+      run: dotnet nuget remove source ${{ nuget_feed_name }} --configfile ${{ nuget_config }}
     
     - name: Auth NuGet
-      run: dotnet nuget add source ${{ env.nuget_feed_source }} --name ${{ env.nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ env.nuget_config }} --store-password-in-clear-text
+      run: dotnet nuget add source ${{ nuget_feed_source }} --name ${{ nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ nuget_config }} --store-password-in-clear-text
      
     - name: Restore NuGet Packages
-      run: dotnet restore --configfile ${{ env.nuget_config }}    
+      run: dotnet restore --configfile ${{ nuget_config }}    
       
     - name: Install NPM dependencies
-      run: cd ${{ env.projectname }} && npm install
+      run: cd ${{ projectname }} && npm install
  
     - name: Build
       run: dotnet build --configuration Release --no-restore
@@ -60,10 +60,10 @@ jobs:
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
       with:        
-        projectBaseDir: 'NursingShiftManagement'
+        projectBaseDir: ${{ projectname }}
         args: >  
          -Dsonar.organization=uwhealth
-         -Dsonar.projectKey=NursingShiftManagement-UWHealth
+         -Dsonar.projectKey=${{ projectname }}-UWHealth
          -Dsonar.exclusions=**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*
          -Dsonar.coverage.exclusions=**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs
          -Dsonar.cs.cobertura.reportsPaths=**/coverage.cobertura.xml
