@@ -40,14 +40,28 @@ jobs:
         languages: ${{ matrix.language }}
 
     - if: matrix.language == 'csharp'
-      name: dotnet restore, npm install, dotnet build and test
-      run: |
-        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-        dotnet nuget add source ${{ inputs.nuget_feed_source }} --name ${{ inputs.nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
-        dotnet restore --configfile ${{ inputs.nuget_config }}    
-        cd ${{ inputs.projectname }} && npm install
-        dotnet build --configuration Release
-        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+      name: remove existing azure devops nuget feed source
+      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+    
+    - if: matrix.language == 'csharp'
+      name: add azure devops nuget feed source to solution wide config   
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} --name ${{ inputs.nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+
+    - if: matrix.language == 'csharp'
+      name: restore nuget files
+      run: dotnet restore --configfile ${{ inputs.nuget_config }}    
+    
+    - if: matrix.language == 'csharp'
+      name: restore npm files
+      run: cd ${{ inputs.projectname }} && npm install
+
+    - if: matrix.language == 'csharp'
+      name: dotnet build
+      run: dotnet build --configuration Release
+    
+    - if: matrix.language == 'csharp'
+      name: dotnet test      
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
 
     - if: matrix.language == 'csharp'
       name: SonarCloud Scan
