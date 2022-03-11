@@ -39,25 +39,18 @@ jobs:
         config-file: codeql-config.yml
         languages: ${{ matrix.language }}
 
-    - name: Remove existing entry from NuGet config
-      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-    
-    - name: Auth NuGet
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} --name ${{ inputs.nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
-     
-    - name: Restore NuGet Packages
-      run: dotnet restore --configfile ${{ inputs.nuget_config }}    
-      
-    - name: Install NPM dependencies
-      run: cd ${{ inputs.projectname }} && npm install
- 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    
-    - name: Test 
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
- 
-    - name: SonarCloud Scan
+    - if: matrix.language == 'csharp'
+      name: dotnet restore, npm install, dotnet build and test
+      run: |
+        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source ${{ inputs.nuget_feed_source }} --name ${{ inputs.nuget_feed_name }} --username az --password ${{ secrets.AZURE_DEVOPS_TOKEN }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+        dotnet restore --configfile ${{ inputs.nuget_config }}    
+        cd ${{ inputs.projectname }} && npm install
+        dotnet build --configuration Release
+        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+
+    - if: matrix.language == 'csharp'
+      name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
       with:        
         projectBaseDir: ${{ inputs.projectname }}
@@ -71,6 +64,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}      
-         
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1      
