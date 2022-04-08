@@ -45,7 +45,7 @@ jobs:
       run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
     
     - name: Add UW Health Azure DevOps NuGet feed
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }}
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }}
 
     - name: Restore NuGet packages
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
