@@ -3,6 +3,9 @@ name: C# CodeQL Analysis
 on:
   workflow_call:
     inputs:
+      project_name:
+        required: true
+        type: string
       nuget_feed_name:
         required: true
         type: string
@@ -51,7 +54,7 @@ jobs:
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
     
     - name: Restore npm packages
-      run: cd ${{ inputs.projectname }} && npm install
+      run: cd ${{ inputs.project_name }} && npm install
 
     - name: Build
       run: dotnet build --configuration Release
