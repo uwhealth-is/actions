@@ -16,7 +16,7 @@ on:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       actions: read
       contents: read
@@ -42,7 +42,7 @@ jobs:
       run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
     
     - name: Add UW Health Azure DevOps NuGet feed
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.AZURE_DEVOPS_TOKEN }} --store-password-in-clear-text
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
     - name: Restore NuGet packages
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
