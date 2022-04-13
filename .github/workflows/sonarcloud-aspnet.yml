@@ -1,1 +1,44 @@
-name: Code Quality Analysis
+name: SonarCloud Scan
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
+    secrets:
+      github_token:
+        required: true
+      sonar_token:
+        required: true
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Run dotnet test   
+      run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
+      
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.6
+      with:        
+        projectBaseDir: ${{ inputs.projectname }}
+        args: >  
+          -Dsonar.organization=uwhealth
+          -Dsonar.projectKey=${{ inputs.projectname }}-UWHealth
+          -Dsonar.exclusions=**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*
+          -Dsonar.coverage.exclusions=**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs
+          -Dsonar.cs.cobertura.reportsPaths=**/coverage.cobertura.xml
+          -Dsonar.verbose=false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
