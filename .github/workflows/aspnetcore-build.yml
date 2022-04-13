@@ -1,0 +1,64 @@
+name: C# CodeQL Analysis
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
+      nuget_feed_name:
+        required: true
+        type: string
+      nuget_feed_source:
+        required: true
+        type: string
+      nuget_config:
+        required: true
+        type: string
+    secrets:
+      ado_token:
+        required: true
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Initialize cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+
+    - name: Remove default Azure DevOps NuGet feed
+      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+    
+    - name: Add UW Health Azure DevOps NuGet feed
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+
+    - name: Restore NuGet packages
+      run: dotnet restore --configfile ${{ inputs.nuget_config }}    
+    
+    - name: Restore npm packages
+      run: cd ${{ inputs.project_name }} && npm install
+
+    - name: Build
+      run: dotnet build --configuration Release -o Build
+      
+    - name: Run dotnet test   
+      run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with: 
+        name: build-${{github.ref}}
+        path: ~/
+        if-no-files-found: error
