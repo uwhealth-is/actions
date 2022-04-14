@@ -54,5 +54,5 @@ jobs:
     - name: Cache Project and Build
       uses: actions/cache@v3
       with:
-        path: ~/**
-        key: ${{ runner.os }}-dependencies-${{github.run_id}}
+        path: ${{ inputs.project_name }}
+        key: ${{ runner.os }}-dependencies-${{ github.run_id }}
