@@ -23,7 +23,7 @@ jobs:
     - name: Get Cached Build
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.project_name }}/bin/Release/net6.0/**
+        path: ${{ inputs.project_name }}
         key: ${{ runner.os }}-build-${{github.run_id}}
         restore-keys: |
           ${{ runner.os }}-build-
