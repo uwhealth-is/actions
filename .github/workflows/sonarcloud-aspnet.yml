@@ -23,7 +23,7 @@ jobs:
     - name: Get Cached Working Directory
       uses: actions/cache@v3
       with:
-        path: /home/runner/work/**
+        path: ${{ github.workspace }}
         key: ${{ runner.os }}-dependencies-${{github.run_id}}
         restore-keys: |
           ${{ runner.os }}-dependencies-          
