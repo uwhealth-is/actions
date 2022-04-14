@@ -16,10 +16,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       
-    - name: Download Build Artifact
-      uses: actions/download-artifact@v3
-      with: 
-        name: Build-${{github.run_id}}
+    - name: Get Cached Build
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.project_name }}/bin/Release/net6.0/**
+        key: ${{ runner.os }}-build-${{github.run_id}}
           
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
