@@ -2,23 +2,7 @@ name: C# CodeQL Analysis
 
 on:
   workflow_call:
-    inputs:
-      project_name:
-        required: true
-        type: string
-      nuget_feed_name:
-        required: true
-        type: string
-      nuget_feed_source:
-        required: true
-        type: string
-      nuget_config:
-        required: true
-        type: string
-    secrets:
-      ado_token:
-        required: true
-
+  
 jobs:
   analyze:
     name: Analyze
@@ -32,32 +16,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       
+    - name: Download Build Artifact
+      uses: actions/upload-artifact@v3
+      with: 
+        name: Build-${GITHUB_RUN_ID}
+          
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         config-file: codeql-config.yml
         languages: 'csharp'
     
-    - name: Initialize cache
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-
-    - name: Remove default Azure DevOps NuGet feed
-      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-    
-    - name: Add UW Health Azure DevOps NuGet feed
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
-
-    - name: Restore NuGet packages
-      run: dotnet restore --configfile ${{ inputs.nuget_config }}    
-    
-    - name: Restore npm packages
-      run: cd ${{ inputs.project_name }} && npm install
-
-    - name: Build
-      run: dotnet build --configuration Release
-
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2      
