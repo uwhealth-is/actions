@@ -20,11 +20,11 @@ jobs:
       security-events: write
 
     steps:
-    - name: Get Cached Project and Build
+    - name: Get Cached Working Directory
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.project_name }}
-        key: ${{ runner.os }}-build-${{github.run_id}}
+        path: /home/runner/work/**
+        key: ${{ runner.os }}-dependencies-${{github.run_id}}
         restore-keys: |
           ${{ runner.os }}-dependencies-          
           
