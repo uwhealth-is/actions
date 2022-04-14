@@ -20,13 +20,13 @@ jobs:
       security-events: write
 
     steps:
-    - name: Get Cached Working Directory
-      uses: actions/cache@v3
+    - name: Download Artifact
+      uses: actions/download-artifact@v3.0.0
       with:
-        path: ${{ github.workspace }}
-        key: ${{ runner.os }}-dependencies-${{github.run_id}}
-        restore-keys: |
-          ${{ runner.os }}-dependencies-          
+        name: work
+        
+    - name: Unzip Artifact
+      run: 7z x work.zip       
           
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
