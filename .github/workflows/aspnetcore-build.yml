@@ -51,8 +51,8 @@ jobs:
     - name: Run dotnet test   
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
     
-    - name: Cache Build
+    - name: Cache Project and Build
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.project_name }}
-        key: ${{ runner.os }}-build-${{github.run_id}}
+        path: ~/**
+        key: ${{ runner.os }}-dependencies-${{github.run_id}}
