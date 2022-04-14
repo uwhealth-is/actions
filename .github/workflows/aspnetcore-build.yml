@@ -54,11 +54,5 @@ jobs:
     - name: Cache Build
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.project_name }}/bin/Release/net6.0/**
+        path: ${{ inputs.project_name }}
         key: ${{ runner.os }}-build-${{github.run_id}}
-
-    - name: Cache Tests
-      uses: actions/cache@v3
-      with:
-        path: TestResults/**
-        key: ${{ runner.os }}-tests-${{github.run_id}}
