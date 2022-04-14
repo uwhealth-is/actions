@@ -19,7 +19,7 @@ jobs:
     - name: Download Build Artifact
       uses: actions/download-artifact@v3
       with: 
-        name: Build-${GITHUB_RUN_ID}
+        name: Build-${{github.run_id}}
           
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
