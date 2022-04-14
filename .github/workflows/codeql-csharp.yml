@@ -2,6 +2,10 @@ name: C# CodeQL Analysis
 
 on:
   workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
   
 jobs:
   analyze:
