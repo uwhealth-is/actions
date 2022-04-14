@@ -20,18 +20,21 @@ jobs:
       security-events: write
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3.0.1
+
     - name: Download Build Artifact
       uses: actions/download-artifact@v3
       with: 
-        name: Build-${GITHUB_RUN_ID}
+        name: Build-${{github.run_id}}
       
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
       with:        
-        projectBaseDir: ${{ inputs.projectname }}
+        projectBaseDir: ${{ inputs.project_name }}
         args: >  
           -Dsonar.organization=uwhealth
-          -Dsonar.projectKey=${{ inputs.projectname }}-UWHealth
+          -Dsonar.projectKey=${{ inputs.project_name }}-UWHealth
           -Dsonar.exclusions=**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*
           -Dsonar.coverage.exclusions=**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs
           -Dsonar.cs.cobertura.reportsPaths=**/coverage.cobertura.xml
