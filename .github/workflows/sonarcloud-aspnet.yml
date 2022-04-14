@@ -23,10 +23,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3.0.1
 
-    - name: Download Build Artifact
-      uses: actions/download-artifact@v3
-      with: 
-        name: Build-${{github.run_id}}
+    - name: Get Cached Build
+      uses: actions/cache@v3
+      with:
+        path: ${{ inputs.project_name }}/bin/Release/net6.0/**
+        key: ${{ runner.os }}-build-${{github.run_id}}
+
+    - name: Get Cached Tests
+      uses: actions/cache@v3
+      with:
+        path: TestResults/**
+        key: ${{ runner.os }}-tests-${{github.run_id}}
       
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
