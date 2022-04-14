@@ -2,6 +2,10 @@ name: JavaScript CodeQL Analysis
 
 on:
   workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
 
 jobs:
   analyze:
@@ -16,7 +20,7 @@ jobs:
     - name: Get Cached Project and Build
       uses: actions/cache@v3
       with:
-        path: ~/**
+        path: ${{ inputs.project_name }}
         key: ${{ runner.os }}-dependencies-${{github.run_id}}
         restore-keys: |
           ${{ runner.os }}-dependencies-
