@@ -1,4 +1,4 @@
-name: C# CodeQL Analysis
+name: Aspnetcore Build & Test
 
 on:
   workflow_call:
