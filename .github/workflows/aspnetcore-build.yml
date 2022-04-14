@@ -51,7 +51,7 @@ jobs:
       run: cd ${{ inputs.project_name }} && npm install
 
     - name: Build
-      run: dotnet build --configuration Release -o Build
+      run: dotnet build --configuration Release
       
     - name: Run dotnet test   
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: BuildArtifact
-        path: ${{ inputs.project_name }}/Build/**
+        path: ${{ inputs.project_name }}/bin/release/net6.0/**
         if-no-files-found: error
 
     - name: Upload Test Results
