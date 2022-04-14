@@ -52,7 +52,7 @@ jobs:
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
     
     - name: Zip Folder
-      run: zip -r work.zip
+      run: zip -r work.zip .
     
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v3.0.0
