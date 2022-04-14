@@ -50,17 +50,19 @@ jobs:
       
     - name: Run dotnet test   
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
-        
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v3
-      with: 
-        name: Build-${{github.run_id}}
+    
+    - name: Cache Build
+      uses: actions/cache@v3
+      with:
         path: ${{ inputs.project_name }}/bin/Release/net6.0/**
-        if-no-files-found: error
+        key: ${{ runner.os }}-build-${{github.run_id}}
+        restore-keys: |
+          ${{ runner.os }}-build-  
 
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v3
-      with: 
-        name: Build-${{github.run_id}}
+    - name: Cache Tests
+      uses: actions/cache@v3
+      with:
         path: TestResults/**
-        if-no-files-found: error
+        key: ${{ runner.os }}-tests-${{github.run_id}}
+        restore-keys: |
+          ${{ runner.os }}-tests- 
