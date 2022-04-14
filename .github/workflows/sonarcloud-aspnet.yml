@@ -26,18 +26,10 @@ jobs:
     - name: Get Cached Build
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.project_name }}/bin/Release/net6.0/**
+        path: ${{ inputs.project_name }}
         key: ${{ runner.os }}-build-${{github.run_id}}
         restore-keys: |
-          ${{ runner.os }}-build-
-          
-    - name: Get Cached Tests
-      uses: actions/cache@v3
-      with:
-        path: TestResults/**
-        key: ${{ runner.os }}-tests-${{github.run_id}}
-        restore-keys: |
-          ${{ runner.os }}-tests-
+          ${{ runner.os }}-build-          
           
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
