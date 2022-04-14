@@ -18,9 +18,12 @@ on:
     secrets:
       ado_token:
         required: true
-
+        
 jobs:
   analyze:
+    env:
+      working_directory: /home/runner/work/${{ inputs.project_name }}/${{ inputs.project_name }}
+    
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
@@ -60,12 +63,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: build-${{github.ref}}
-        path: bin/release/net6.0/*.*
+        path: ${{ env.working_directory }}/bin/release/net6.0/*.*
         if-no-files-found: error
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with: 
         name: build-${{github.ref}}
-        path: TestResults
+        path: ${{ env.working_directory }}/TestResults/*.*
         if-no-files-found: error
