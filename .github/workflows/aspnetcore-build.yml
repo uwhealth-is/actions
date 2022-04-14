@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: build-${{github.ref}}
-        path: ${{ env.working_directory }}/bin/release/net6.0/*.*
+        path: ${{ env.working_directory }}/${{ inputs.project_name }}/bin/release/net6.0/*.*
         if-no-files-found: error
 
     - name: Upload Test Results
