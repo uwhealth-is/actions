@@ -54,13 +54,13 @@ jobs:
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v3
       with: 
-        name: Build-${GITHUB_RUN_ID}
+        name: Build-${{github.run_id}}
         path: ${{ inputs.project_name }}/bin/Release/net6.0/**
         if-no-files-found: error
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with: 
-        name: Build-${GITHUB_RUN_ID}
+        name: Build-${{github.run_id}}
         path: TestResults/**
         if-no-files-found: error
