@@ -20,16 +20,13 @@ jobs:
       security-events: write
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3.0.1
-
-    - name: Get Cached Build
+    - name: Get Cached Project and Build
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.project_name }}
+        path: ~/**
         key: ${{ runner.os }}-build-${{github.run_id}}
         restore-keys: |
-          ${{ runner.os }}-build-          
+          ${{ runner.os }}-dependencies-          
           
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
