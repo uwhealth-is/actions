@@ -20,10 +20,7 @@ on:
         required: true
         
 jobs:
-  analyze:
-    env:
-      working_directory: /home/runner/work/${{ inputs.project_name }}/${{ inputs.project_name }}
-    
+  analyze:  
     name: Analyze
     runs-on: ubuntu-latest
     permissions:
@@ -54,7 +51,7 @@ jobs:
       run: cd ${{ inputs.project_name }} && npm install
 
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration Release -o Build
       
     - name: Run dotnet test   
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
@@ -62,13 +59,13 @@ jobs:
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v3
       with: 
-        name: build-${{github.ref}}
-        path: ${{ env.working_directory }}/${{ inputs.project_name }}/bin/release/net6.0/*.*
+        name: BuildArtifact
+        path: ${{ inputs.project_name }}/Build/**
         if-no-files-found: error
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
       with: 
-        name: build-${{github.ref}}
-        path: ${{ env.working_directory }}/TestResults/*.*
+        name: BuildArtifact
+        path: ${{ inputs.project_name }}/TestResults/*.*
         if-no-files-found: error
