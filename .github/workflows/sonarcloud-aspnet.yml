@@ -1,4 +1,4 @@
-name: SonarCloud Scan
+name: SonarCloud Analysis
 
 on:
   workflow_call:
@@ -8,6 +8,8 @@ on:
         type: string
     secrets:
       sonar_token:
+        required: true
+      github_token:
         required: true
 
 jobs:
@@ -33,12 +35,12 @@ jobs:
       with:        
         projectBaseDir: ${{ inputs.project_name }}
         args: >  
-          -Dsonar.organization=uwhealth
-          -Dsonar.projectKey=${{ inputs.project_name }}-UWHealth
+          -Dsonar.organization=uwhealth-is
+          -Dsonar.projectKey=${{ inputs.project_name }}-UWHealth-is
           -Dsonar.exclusions=**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*
           -Dsonar.coverage.exclusions=**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs
           -Dsonar.cs.cobertura.reportsPaths=**/coverage.cobertura.xml
           -Dsonar.verbose=false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.github_token }}
+        SONAR_TOKEN: ${{ secrets.sonar_token }}
