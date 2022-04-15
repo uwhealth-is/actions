@@ -25,6 +25,7 @@ jobs:
       security-events: write
 
     steps:
+    - uses: actions/checkout@v3
     - id: Build
       uses: uwhealth-is/actions/.github/workflows/composite/aspnetcore-build.yml@main
       with:
