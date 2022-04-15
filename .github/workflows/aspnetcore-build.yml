@@ -25,29 +25,10 @@ jobs:
       security-events: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Initialize cache
-      uses: actions/cache@v3
+    - id: Build
+      uses: actions/composite/aspnetcore-build.yml@main
       with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-
-    - name: Remove default Azure DevOps NuGet feed
-      run: dotnet nuget remove source ${{ env.nuget_feed_name }} --configfile ${{ env.nuget_config }}
-    
-    - name: Add UW Health Azure DevOps NuGet feed
-      run: dotnet nuget add source ${{ env.nuget_feed_source }} -n ${{ env.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ env.nuget_config }} --store-password-in-clear-text
-
-    - name: Restore NuGet packages
-      run: dotnet restore --configfile ${{ env.nuget_config }}    
-    
-    - name: Restore npm packages
-      run: cd ${{ inputs.project_name }} && npm install
-
-    - name: Build
-      run: dotnet build --configuration Release
+        project_name: ${{ inputs.project_name }}
       
     - name: Run dotnet test   
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
