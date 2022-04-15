@@ -1,0 +1,39 @@
+name: ASP.NET Core Build
+description: Build an ASP.NET Core application
+inputs:
+  project_name:
+    required: true
+    
+runs:
+  using: "composite"
+  
+  env:
+      nuget_feed_name: 'UWHealth'
+      nuget_feed_source: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
+      nuget_config: 'Nuget.config'
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Initialize cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+
+    - name: Remove default Azure DevOps NuGet feed
+      run: dotnet nuget remove source ${{ env.nuget_feed_name }} --configfile ${{ env.nuget_config }}
+    
+    - name: Add UW Health Azure DevOps NuGet feed
+      run: dotnet nuget add source ${{ env.nuget_feed_source }} -n ${{ env.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ env.nuget_config }} --store-password-in-clear-text
+
+    - name: Restore NuGet packages
+      run: dotnet restore --configfile ${{ env.nuget_config }}    
+    
+    - name: Restore npm packages
+      run: cd ${{ inputs.project_name }} && npm install
+
+    - name: Build
+      run: dotnet build --configuration Release
+      
