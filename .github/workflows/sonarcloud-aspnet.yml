@@ -26,7 +26,7 @@ jobs:
         name: build-artifact
         
     - name: Unzip Artifact
-      run: 7z x work.zip       
+      run: 7z x build-artifact.zip       
           
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@v1.6
