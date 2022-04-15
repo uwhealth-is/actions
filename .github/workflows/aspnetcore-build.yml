@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - id: Build
-      uses: actions/.github/workflows/composite/aspnetcore-build.yml@main
+      uses: uwhealth-is/actions/.github/workflows/composite/aspnetcore-build.yml@main
       with:
         project_name: ${{ inputs.project_name }}
       
