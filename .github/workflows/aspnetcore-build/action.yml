@@ -3,18 +3,21 @@ description: Build an ASP.NET Core application
 inputs:
   project_name:
     required: true
+  nuget_feed_name: 
+    required: false
+    default: 'UWHealth'
+  nuget_feed_source: 
+    required: false
+    default: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
+  nuget_config: 
+    required: false
+    default: 'Nuget.config'
 secrets:
   ado_token:
     required: true
     
 runs:
   using: "composite"
-  
-  env:
-      nuget_feed_name: 'UWHealth'
-      nuget_feed_source: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
-      nuget_config: 'Nuget.config'
-
   steps:   
     - name: Initialize cache
       uses: actions/cache@v3
@@ -23,13 +26,13 @@ runs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
 
     - name: Remove default Azure DevOps NuGet feed
-      run: dotnet nuget remove source ${{ env.nuget_feed_name }} --configfile ${{ env.nuget_config }}
+      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
     
     - name: Add UW Health Azure DevOps NuGet feed
-      run: dotnet nuget add source ${{ env.nuget_feed_source }} -n ${{ env.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ env.nuget_config }} --store-password-in-clear-text
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Restore NuGet packages
-      run: dotnet restore --configfile ${{ env.nuget_config }}    
+      run: dotnet restore --configfile ${{ inputs.nuget_config }}    
     
     - name: Restore npm packages
       run: cd ${{ inputs.project_name }} && npm install
