@@ -11,12 +11,7 @@ on:
         required: true
         
 jobs:
-  BuildTest:  
-    env:
-      nuget_feed_name: 'UWHealth'
-      nuget_feed_source: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
-      nuget_config: 'Nuget.config'
-      
+  BuildTest:     
     name: Build and Test
     runs-on: ubuntu-latest
     permissions:
