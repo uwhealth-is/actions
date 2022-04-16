@@ -6,6 +6,9 @@ on:
       project_name:
         required: true
         type: string
+    secrets:
+      ado_token:
+        required: true
   
 jobs:
   analyze:
@@ -17,19 +20,26 @@ jobs:
       security-events: write
 
     steps:
-    - name: Download Artifact
-      uses: actions/download-artifact@v3.0.0
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Checkout actions repository
+      uses: actions/checkout@v3
       with:
-        name: work
-        
-    - name: Unzip Artifact
-      run: 7z x work.zip
-          
+        repository: uwhealth-is/actions
+        path: ./.github/uwh-actions
+    
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         config-file: codeql-config.yml
         languages: 'csharp'
+        
+    - name: Run dotnet build
+      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
+      with:
+        project_name: ${{ inputs.project_name }}
+        ado_token: ${{ secrets.ado_token }}
     
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2      
