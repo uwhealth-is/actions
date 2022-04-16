@@ -27,7 +27,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        repository: uwhealth-is/actions@main
+        repository: uwhealth-is/actions
         path: ./.github/uwh-actions
         
     - uses: ./github/uwh-actions/.github/workflows/aspnetcore-build
