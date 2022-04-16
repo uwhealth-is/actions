@@ -12,10 +12,7 @@ runs:
       nuget_feed_source: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
       nuget_config: 'Nuget.config'
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
+  steps:   
     - name: Initialize cache
       uses: actions/cache@v3
       with:
