@@ -32,7 +32,6 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        config-file: codeql-config.yml
         languages: 'csharp'
         
     - name: Run dotnet build
