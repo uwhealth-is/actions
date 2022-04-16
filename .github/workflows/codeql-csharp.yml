@@ -1,4 +1,4 @@
-name: C# CodeQL Analysis
+name: CodeQL Analysis (csharp)
 
 on:
   workflow_call:
