@@ -30,7 +30,7 @@ jobs:
         repository: uwhealth-is/actions
         path: ./.github/uwh-actions
         
-    - uses: ./github/uwh-actions/.github/workflows/aspnetcore-build
+    - uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
       
