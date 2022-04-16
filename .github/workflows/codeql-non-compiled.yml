@@ -8,21 +8,9 @@ on:
         type: string
 
 jobs:
-  language-matrix:
-    name: Create language matrix
-    runs-on: ubuntu-latest
-    outputs:
-      languages: ${{ steps.create-matrix.outputs.matrix }}
-    
-    steps:
-      - id: create-matrix
-        run: |
-          echo "::set-output name=matrix::[${{ inputs.languages }}]"
-    
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-    needs: language-matrix
     permissions:
       actions: read
       contents: read
@@ -31,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ${{ fromJson(needs.language-matrix.outputs.languages) }}
+        language: ${{ fromJson(inputs.languages) }}
 
     steps:
     - name: Checkout repository
