@@ -38,6 +38,7 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
+        ado_token: ${{ secrets.ado_token }}
       
     - name: Run dotnet test   
       run: dotnet test --no-build --logger trx --configuration Release --collect:"XPlat Code Coverage" --results-directory "TestResults"
