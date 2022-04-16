@@ -3,6 +3,8 @@ description: Build an ASP.NET Core application
 inputs:
   project_name:
     required: true
+  ado_token:
+    required: true
   nuget_feed_name: 
     required: false
     default: 'UWHealth'
@@ -12,9 +14,6 @@ inputs:
   nuget_config: 
     required: false
     default: 'Nuget.config'
-secrets:
-  ado_token:
-    required: true
     
 runs:
   using: "composite"
@@ -31,7 +30,7 @@ runs:
     
     - name: Add UW Health Azure DevOps NuGet feed
       shell: bash
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Restore NuGet packages
       shell: bash
