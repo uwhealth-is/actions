@@ -3,6 +3,9 @@ description: Build an ASP.NET Core application
 inputs:
   project_name:
     required: true
+secrets:
+  ado_token:
+    required: true
     
 runs:
   using: "composite"
