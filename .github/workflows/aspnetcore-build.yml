@@ -28,8 +28,9 @@ jobs:
     - uses: actions/checkout@v2
       with:
         repository: uwhealth-is/actions
+        path: ./.github/uwh-actions
         
-    - uses: uwhealth-is/actions/.github/workflows/composite/aspnetcore-build.yml@main
+    - uses: ./github/uwh-actions/.github/workflows/composite/aspnetcore-build.yml@main
       with:
         project_name: ${{ inputs.project_name }}
       
