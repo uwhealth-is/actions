@@ -9,6 +9,8 @@ on:
     secrets:
       ado_token:
         required: true
+      sonar_token:
+        required: true
         
 jobs:
   BuildTest:     
