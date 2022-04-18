@@ -15,7 +15,7 @@ on:
 jobs:
   BuildTest:     
     name: Build and Test
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
