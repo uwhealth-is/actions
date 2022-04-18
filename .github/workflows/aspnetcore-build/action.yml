@@ -27,9 +27,9 @@ runs:
     - name: Remove default Azure DevOps NuGet feed
       shell: bash
       run: |
-        echo "$(ls)"
+        write-output "$(ls)"
         cd ${{inputs.project_name}}
-        echo "$(ls)"
+        write-output "$(ls)"
 
     - name: Remove default Azure DevOps NuGet feed
       shell: bash
