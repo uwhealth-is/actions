@@ -56,12 +56,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin 
-            /k:"${{ inputs.project_name }}-UWHealth-is" 
-            /o:"uwhealth-is" 
-            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" 
-            /d:sonar.host.url="https://sonarcloud.io"
-            /d:sonar.exclusions="**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*"
-            /d:sonar.coverage.exclusions="**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs"
+          .\.sonar\scanner\dotnet-sonarscanner begin \
+            /k:"${{ inputs.project_name }}-UWHealth-is" \
+            /o:"uwhealth-is" \
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.exclusions="**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*" \
+            /d:sonar.coverage.exclusions="**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs" \
             /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
