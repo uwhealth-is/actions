@@ -40,21 +40,24 @@ jobs:
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-          
-      - name: Unzip Artifact
-        run: 7z x build-artifact.zip 
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner     
         
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*" /d:sonar.coverage.exclusions="**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"   
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*" /d:sonar.coverage.exclusions="**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"   
+             
+      - name: Run dotnet build
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
+        with:
+          project_name: ${{ inputs.project_name }}
+          ado_token: ${{ secrets.ado_token }}   
+          
+      - name: Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
