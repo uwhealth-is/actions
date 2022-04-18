@@ -14,15 +14,7 @@ jobs:
   SonarCloudAnalyze:
     name: SonarCloudAnalyze
     runs-on: windows-latest
-    steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: build-artifact
-          
-      - name: Unzip Artifact
-        run: 7z x build-artifact.zip 
-     
+    steps:    
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
@@ -54,6 +46,14 @@ jobs:
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          
+      - name: Unzip Artifact
+        run: 7z x build-artifact.zip 
+        
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
