@@ -48,13 +48,26 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: .\.sonar\scanner\dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="**/*.bin,**/obj/**,**/wwwroot/dist/**,**/wwwroot/lib/**,**/Migrations/**/*" /d:sonar.coverage.exclusions="**/Startup.cs,**/Program.cs,**/wwwroot/**/*.js,**/*Tests.cs" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"   
-             
-      - name: Run dotnet build
-        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
-        with:
-          project_name: ${{ inputs.project_name }}
-          ado_token: ${{ secrets.ado_token }}   
+
+      - name: Checkout
+        uses: actions/checkout@v3.0.1
+
+      #- name: Run dotnet build
+      #  uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
+      #  with:
+      #    project_name: ${{ inputs.project_name }}
+      #    ado_token: ${{ secrets.ado_token }}   
           
+      - name: Run dotnet test   
+        run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
+
+      #- name: ReportGenerator
+      #  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.4
+      #  with:
+      #    reports: 'coverage.opencover.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+      #    targetdir: 'TestResults' # REQUIRED # The directory where the generated report should be saved.
+      #    reporttypes: 'Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
