@@ -26,8 +26,15 @@ runs:
 
     - name: Remove default Azure DevOps NuGet feed
       shell: bash
+      run: |
+        ls
+        cd ${{inputs.project_name}}
+        ls
+
+    - name: Remove default Azure DevOps NuGet feed
+      shell: bash
       run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-    
+
     - name: Add UW Health Azure DevOps NuGet feed
       shell: bash
       run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
