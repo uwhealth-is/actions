@@ -61,6 +61,10 @@ jobs:
       with:
         repository: uwhealth-is/actions
         path: ./.github/uwh-actions
+    
+    - name: move back a directory
+      shell: pwsh
+      run: cd ..
         
     - name: Run dotnet build
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
