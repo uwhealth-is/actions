@@ -55,16 +55,6 @@ jobs:
           project_name: ${{ inputs.project_name }}
           ado_token: ${{ secrets.ado_token }}   
           
-      - name: Run dotnet test   
-        run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
-
-      #- name: ReportGenerator
-      #  uses: danielpalme/ReportGenerator-GitHub-Action@5.1.4
-      #  with:
-      #    reports: 'coverage.opencover.xml' # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-      #    targetdir: 'TestResults' # REQUIRED # The directory where the generated report should be saved.
-      #    reporttypes: 'Cobertura' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
-
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
