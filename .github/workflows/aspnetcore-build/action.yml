@@ -43,6 +43,3 @@ runs:
     - name: Build
       shell: bash
       run: dotnet build --configuration Release
-      
-    - name: Run dotnet test   
-      run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*     
