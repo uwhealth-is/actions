@@ -5,6 +5,7 @@ on:
 
 jobs:
   dependency-review:
+    name: Check dependencies
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Repository'
