@@ -73,7 +73,7 @@ jobs:
                 
     - name: Run dotnet test
       shell: pwsh
-      run: dotnet test --no-build --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
+      run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
     
     - name: End SonarScanner
       env:
