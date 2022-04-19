@@ -1,9 +1,7 @@
 name: 'Dependency Review'
 
 on:
-  pull_request:
-    branches:
-      - '**'
+  workflow_call:
 
 jobs:
   dependency-review:
