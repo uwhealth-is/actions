@@ -11,7 +11,10 @@ on:
         required: true
       sonar_token:
         required: true
-        
+
+env: 
+  release_path: ./${{inputs.project_name}}/bin/Release/net6.0
+
 jobs:
   BuildTest:     
     name: Build and Test
@@ -80,4 +83,30 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       shell: pwsh
-      run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"      
+      run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      
+    - name: Create Release
+      if: ${{ success() }}
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event_name }}
+        release_name: Release-${{ github.run_id }}
+        draft: false
+        prerelease: false
+
+    - name: Zip Folder
+      run: zip -r release.zip ${{ env.release_path }}
+        
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ${{ env.release_path }}/my-artifact.zip
+        asset_name: release.zip
+        asset_content_type: application/zip
