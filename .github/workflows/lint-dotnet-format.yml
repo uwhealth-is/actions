@@ -1,0 +1,24 @@
+name: Dotnet Format
+
+on:
+  workflow_call:
+
+jobs:
+  lint:
+    name: Format source code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install latest dotnet version
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Check formatting
+        shell: pwsh
+        run: |
+          dotnet format --verbosity normal --no-restore --exclude */Migrations/* --verify-no-changes
+          
