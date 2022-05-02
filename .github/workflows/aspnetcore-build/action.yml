@@ -4,7 +4,8 @@ inputs:
   project_name:
     required: true
   ado_token:
-    required: true
+    required: false
+    default: ''
   nuget_feed_name: 
     required: false
     default: 'UWHealth'
@@ -24,13 +25,12 @@ runs:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
 
-    - name: Remove default Azure DevOps NuGet feed
+    - name: Remove and Update UW Health Azure DevOps NuGet feed
+      if: inputs.ado_token != ''
       shell: bash
-      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-
-    - name: Add UW Health Azure DevOps NuGet feed
-      shell: bash
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+      run: |
+        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Restore NuGet packages
       shell: bash
