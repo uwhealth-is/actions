@@ -3,6 +3,14 @@ description: Build an ASP.NET Core application
 inputs:
   project_name:
     required: true
+  ado_token:
+    required: true
+  nuget_feed_name: 
+    required: false
+    default: 'UWHealth'
+  nuget_feed_source: 
+    required: false
+    default: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
   nuget_config: 
     required: false
     default: 'Nuget.config'
@@ -15,6 +23,14 @@ runs:
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+
+    - name: Remove default Azure DevOps NuGet feed
+      shell: bash
+      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+
+    - name: Add UW Health Azure DevOps NuGet feed
+      shell: bash
+      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Restore NuGet packages
       shell: bash
