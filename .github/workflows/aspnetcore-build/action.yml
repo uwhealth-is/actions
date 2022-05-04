@@ -43,6 +43,8 @@ runs:
         npm config set registry=https://registry.npmjs.org/
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
         npm install
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Build
       shell: bash
