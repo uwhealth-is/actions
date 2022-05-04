@@ -46,7 +46,7 @@ runs:
         cd ${{ inputs.project_name }}
         npm config set registry=https://registry.npmjs.org/
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-        npm config set //npm.pkg.github.com/:_authToken ${{ inputs.github_token }}
+        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.github_token }}
         npm install
 
     - name: Build
