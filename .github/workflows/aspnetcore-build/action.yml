@@ -48,6 +48,8 @@ runs:
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
         npm config set //npm.pkg.github.com/:_authToken=${{ inputs.github_token }}
         npm install
+      with: 
+        GITHUB_TOKEN: ${{ inputs.github_token }}
 
     - name: Build
       shell: bash
