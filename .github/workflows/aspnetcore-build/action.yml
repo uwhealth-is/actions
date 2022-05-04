@@ -38,19 +38,22 @@ runs:
     - name: Restore NuGet packages
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
-    
-    - name: Restore npm packages
+
+    - name: Change to Project directory
+      shell: bash
+      run: cd ${{ inputs.project_name }}
+
+    - name: Set up .npmrc file to for github packages
       if: inputs.github_token != ''
       shell: bash
       run: | 
-        cd ${{ inputs.project_name }}
-        npm config set registry=https://registry.npmjs.org/
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
         npm config set //npm.pkg.github.com/:_authToken=${{ inputs.github_token }}
-        npm install
-      with: 
-        GITHUB_TOKEN: ${{ inputs.github_token }}
 
+    - name: NPM Restore
+      shell: bash
+      run: npm install
+      
     - name: Build
       shell: bash
       run: dotnet build --configuration Release
