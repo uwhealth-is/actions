@@ -39,9 +39,10 @@ runs:
     - name: Restore npm packages
       shell: bash
       run: | 
-        cd ${{ inputs.project_name }} 
-        npm install --registry=https://registry.npmjs.org/ 
-        npm install --@uwhealth-is:registry=https://npm.pkg.github.com/
+        cd ${{ inputs.project_name }}
+        npm config set registry=https://registry.npmjs.org/
+        npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
+        npm install
 
     - name: Build
       shell: bash
