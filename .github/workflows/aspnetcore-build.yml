@@ -99,8 +99,9 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-        npm_token: ${{ secrets.NPM_TOKEN }}
-	                 
+      env: 
+         npm_token: ${{ secrets.NPM_TOKEN }}
+	
     - name: Run dotnet test
       shell: pwsh
       run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
