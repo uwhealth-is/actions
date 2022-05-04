@@ -39,20 +39,19 @@ runs:
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
 
-    - name: Change to Project directory
-      shell: bash
-      run: cd ${{ inputs.project_name }}
-
     - name: Set up .npmrc file to for github packages
       if: inputs.github_token != ''
       shell: bash
       run: | 
+        cd ${{ inputs.project_name }}
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
         npm config set //npm.pkg.github.com/:_authToken=${{ inputs.github_token }}
 
     - name: NPM Restore
       shell: bash
-      run: npm install
+      run: |
+        cd ${{ inputs.project_name }}
+        npm install
       
     - name: Build
       shell: bash
