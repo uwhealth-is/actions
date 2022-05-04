@@ -6,7 +6,7 @@ inputs:
   ado_token:
     required: false
     default: ''
-  npm_token: 
+  github_token: 
     required: false
     default: ''
   nuget_feed_name: 
@@ -40,13 +40,13 @@ runs:
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
     
     - name: Restore npm packages
-      if: inputs.npm_token != ''
+      if: inputs.github_token != ''
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
         npm config set registry=https://registry.npmjs.org/
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-        npm config set //npm.pkg.github.com/:_authToken ${{ inputs.npm_token }}
+        npm config set //npm.pkg.github.com/:_authToken ${{ inputs.github_token }}
         npm install
 
     - name: Build
