@@ -31,9 +31,7 @@ on:
         required: true
       sonar_token:
         required: true
-      npm_token: 
-        required: true
-
+        
 jobs:
   BuildTest:     
     name: Build and Test
@@ -99,7 +97,7 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-        npm_token: ${{ secrets.npm_token }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run dotnet test
       shell: pwsh
