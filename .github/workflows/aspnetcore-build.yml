@@ -94,14 +94,13 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
       shell: pwsh
       run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml" 
-        
+
     - name: Run dotnet build
-      env: 
-        npm_token: ${{ secrets.NPM_TOKEN }}
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-	
+        npm_token: ${{ secrets.npm_token }}
+
     - name: Run dotnet test
       shell: pwsh
       run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
