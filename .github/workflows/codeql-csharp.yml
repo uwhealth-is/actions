@@ -9,8 +9,6 @@ on:
     secrets:
       ado_token:
         required: true
-      package_pat:
-        required: true       
   
 jobs:
   analyze:
@@ -41,7 +39,6 @@ jobs:
       with:
         project_name: ${{ inputs.project_name }}
         ado_token: ${{ secrets.ado_token }}
-        package_pat: ${{ secrets.package_pat }}
         
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2      
