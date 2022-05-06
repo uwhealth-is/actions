@@ -6,7 +6,7 @@ inputs:
   ado_token:
     required: false
     default: ''
-  github_token: 
+  package_pat: 
     required: false
     default: ''
   nuget_feed_name: 
@@ -40,12 +40,12 @@ runs:
       run: dotnet restore --configfile ${{ inputs.nuget_config }}    
 
     - name: Set up .npmrc file to for github packages
-      if: inputs.github_token != ''
+      if: inputs.package_pat != ''
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.github_token }}
+        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
 
     - name: NPM Restore
       shell: bash
