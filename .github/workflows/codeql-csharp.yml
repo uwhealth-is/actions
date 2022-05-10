@@ -7,6 +7,8 @@ on:
         required: true
         type: string
     secrets:
+      ado_token:
+        required: false
       package_pat:
         required: false
   
@@ -38,6 +40,7 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
+        ado_token: ${{ secrets.ado_token }}
         package_pat: ${{ secrets.package_pat }}
         
     - name: Perform CodeQL Analysis
