@@ -43,11 +43,9 @@ runs:
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
-        if test -f "package.json"; then
-          npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-          npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
-          npm install
-        fi
+        npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
+        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
+        npm install
       
     - name: Build
       shell: bash
