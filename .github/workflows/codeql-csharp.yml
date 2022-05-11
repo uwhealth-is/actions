@@ -9,8 +9,6 @@ on:
     secrets:
       ado_token:
         required: false
-      package_pat:
-        required: false
   
 jobs:
   analyze:
@@ -40,8 +38,7 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-        package_pat: ${{ secrets.package_pat }}
-        ##ado_token: ${{ secrets.ado_token }}
+        ado_token: ${{ secrets.ado_token }}
         
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2      
