@@ -35,15 +35,9 @@ runs:
         dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
         dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
-    - name: Turn off command output for nuget package restore
-      run: echo '::set-output name=action_echo::disabled'
-
     - name: Restore NuGet packages
       shell: bash
-      run: dotnet restore --configfile ${{ inputs.nuget_config }}    
-
-    - name: Turn on command output
-      run: echo '::set-output name=action_echo::enabled'
+      run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
 
     - name: Set up .npmrc file to for github packages
       if: inputs.package_pat != ''
