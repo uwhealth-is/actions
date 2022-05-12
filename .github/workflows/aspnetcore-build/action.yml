@@ -52,4 +52,4 @@ runs:
       
     - name: Build
       shell: bash
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration Release --no-restore
