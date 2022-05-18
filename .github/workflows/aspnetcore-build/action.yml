@@ -37,7 +37,7 @@ runs:
         dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Restore NuGet packages (if not cached)
-      if: steps.nuget-cache.outputs.cache-hit != 'true'
+      #if: steps.nuget-cache.outputs.cache-hit != 'true'
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
 
