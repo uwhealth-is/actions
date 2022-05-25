@@ -39,9 +39,14 @@ runs:
     - name: Restore NuGet packages (if not cached)
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
-     
+
+    - name: Get npm package file hash
+      shell: bash
+      id: npm-hash
+      run: echo "::set-output name=NPM_HASH::hashFiles('**/${{inputs.project_name}}/package.json')"
+
     - name: Set up .npmrc file to for github packages
-      if: ${{ hashFiles('**/${{ inputs.project_name }}/package.json') }} != ''
+      if:  ${{ steps.npm-hash.outputs.NPM_HASH }} != ''
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
