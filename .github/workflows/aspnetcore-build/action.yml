@@ -41,8 +41,9 @@ runs:
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
 
     - name: debug
+      shell: bash
       env:
-        HASH: ${{ hashFiles('${{ inputs.project_name }}/package.json') }}
+        HASH: hashFiles('${{ inputs.project_name }}/package.json')
       run: 'echo "HASH: ${HASH}"'
      
     - name: Set up .npmrc file to for github packages
