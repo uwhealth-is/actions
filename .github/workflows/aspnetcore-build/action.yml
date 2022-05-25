@@ -43,7 +43,7 @@ runs:
     - name: Get npm package file hash
       shell: bash
       id: npm-hash
-      run: echo "::set-output name=NPM_HASH::hashFiles('**/${{inputs.project_name}}/package.json')"
+      run: echo "::set-output name=NPM_HASH::${{hashFiles('**/${{inputs.project_name}}/package.json')}}"
 
     - name: Set up .npmrc file to for github packages
       if:  ${{ steps.npm-hash.outputs.NPM_HASH }} != ''
