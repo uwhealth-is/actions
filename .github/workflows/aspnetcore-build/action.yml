@@ -46,7 +46,7 @@ runs:
     #  run: echo "::set-output name=NPM_HASH::${{ hashFiles(format('**/{0}/package.json', inputs.project_name))) }}"
 
     - name: Set up .npmrc file to for github packages
-      if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name))) != '' }}
+      if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' }}
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
