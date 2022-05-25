@@ -8,9 +8,9 @@ on:
         type: string
     secrets:
       ado_token:
-        required: true
+        required: false
       package_pat:
-        required: true
+        required: false
   
 jobs:
   analyze:
