@@ -24,24 +24,42 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
-    - name: Checkout actions repository
-      uses: actions/checkout@v3
-      with:
-        repository: uwhealth-is/actions
-        path: ./.github/uwh-actions
-    
+          
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         languages: 'csharp'
         
-    - name: Run dotnet build
-      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
+    - name: Initialize cache
+      id: nuget-cache
+      uses: actions/cache@v3
       with:
-        project_name: ${{ inputs.project_name }}
-        ado_token: ${{ secrets.ado_token }}
-        package_pat: ${{ secrets.package_pat }}
-        
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+
+    - name: Remove and Update UW Health Azure DevOps NuGet feed
+      if: inputs.ado_token != ''
+      shell: bash
+      run: |
+        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+  
+    - name: Restore NuGet packages (if not cached)
+      shell: bash
+      run: dotnet restore --configfile ${{ inputs.nuget_config }}
+
+    - name: Set up .npmrc file to for github packages
+      if: hashFiles('**/package.json') != ''
+      shell: bash
+      run: | 
+        cd ${{ inputs.project_name }}
+        npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
+        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
+        npm install
+      
+    - name: Build
+      shell: bash
+      run: dotnet build --configuration Release --no-restore
+                
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2      
