@@ -1,0 +1,4 @@
+name: "My JS CodeQL config"
+
+paths-ignore: 
+  - '**/lib'
