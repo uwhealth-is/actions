@@ -9,8 +9,6 @@ on:
     secrets:
       ado_token:
         required: false
-      package_pat:
-        required: false
   
 jobs:
   analyze:
