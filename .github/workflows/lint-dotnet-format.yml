@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Before checkout set Eof config.
+        shell: pwsh
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - name: Checkout repository
         uses: actions/checkout@v3
       
