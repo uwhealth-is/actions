@@ -6,15 +6,9 @@ on:
 jobs:
   lint:
     name: Format source code
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-      - name: Before checkout set Eof config.
-        shell: pwsh
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
-
       - name: Checkout repository
         uses: actions/checkout@v3
       
