@@ -38,11 +38,8 @@ jobs:
   BuildTest:     
     name: Build and Test
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: write
-      security-events: write
-
+    permissions: read-all|write-all
+    
     steps:      
     - name: Checkout repository
       uses: actions/checkout@v3
