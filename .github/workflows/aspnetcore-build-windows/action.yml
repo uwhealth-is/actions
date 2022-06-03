@@ -18,7 +18,13 @@ inputs:
   nuget_config: 
     required: false
     default: 'Nuget.config'
-    
+  telerik_user: 
+    required: false
+    default: ''
+  telerik_password: 
+    required: false
+    default: ''
+
 runs:
   using: "composite"
   steps:   
@@ -35,7 +41,13 @@ runs:
       run: |
         dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
         dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
-
+ 
+    - name: Remove and Update Telerik NuGet feed
+      if: ${{ inputs.telerik_user != ''}}
+      shell: bash
+      run: | 
+        dotnet nuget remove source Telerik --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source Telerik -n ${{ inputs.nuget_feed_name }} -u ${{ inputs.telerik_user }} -p ${{ inputs.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: install Libman CLI and run it if libman.json exists
       if: ${{ hashFiles(format('**/{0}/libman.json', inputs.project_name)) != '' }}    
