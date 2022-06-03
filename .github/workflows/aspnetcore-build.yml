@@ -90,7 +90,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
       shell: pwsh
-      run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml" 
+      run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml" /d:sonar.scanner.metadataFilePath=".scannerwork"
 
     - name: Run dotnet build
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
@@ -111,6 +111,8 @@ jobs:
 
     - name: SonarQube Quality Gate Check
       env: 
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
       uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
-      
+      with:
+        scanMetadataReportFile: ".scannerwork/report-task.txt"   
