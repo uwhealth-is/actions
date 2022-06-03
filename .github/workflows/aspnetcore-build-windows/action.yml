@@ -36,14 +36,17 @@ runs:
         dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
         dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
+
+    - name: install Libman CLI and run it if libman.json exists
+      if: ${{ hashFiles(format('**/{0}/libman.json', inputs.project_name)) != '' }}    
+      shell: bash
+      run: |
+        dotnet tool install -g Microsoft.Web.LibraryManager.Cli
+        libman restore
+
     - name: Restore NuGet packages (if not cached)
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
-
-    #- name: Get npm package file hash
-    #  shell: bash
-    #  id: npm-hash
-    #  run: echo "::set-output name=NPM_HASH::${{ hashFiles(format('**/{0}/package.json', inputs.project_name))) }}"
 
     - name: Set up .npmrc file to for github packages
       if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
