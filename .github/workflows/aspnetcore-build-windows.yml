@@ -49,13 +49,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Remove default Azure DevOps NuGet feed
+    - name: Remove and Update UW Health Azure DevOps NuGet feed
+      if: ${{ inputs.ado_token != ''}}
       shell: bash
-      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-
-    - name: Add UW Health Azure DevOps NuGet feed
+      run: |
+        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ inputs.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+ 
+    - name: Remove and Update Telerik NuGet feed
+      if: ${{ inputs.telerik_user != ''}}
       shell: bash
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+      run: | 
+        dotnet nuget remove source Telerik --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source Telerik -n ${{ inputs.nuget_feed_name }} -u ${{ inputs.telerik_user }} -p ${{ inputs.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Checkout actions repository
       uses: actions/checkout@v3
