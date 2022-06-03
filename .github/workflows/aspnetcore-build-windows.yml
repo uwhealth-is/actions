@@ -26,6 +26,14 @@ on:
         required: false
         type: string
         default: 'Nuget.config'
+      telerik_user: 
+        required: false
+        type: string
+        default: ''
+      telerik_password: 
+        required: false
+        type: string
+        default: ''
     secrets:
       ado_token:
         required: true
@@ -97,6 +105,8 @@ jobs:
       with:
         project_name: ${{ inputs.project_name }}
         package_pat: ${{ secrets.PACKAGE_PAT }}
+        telerik_user: ${{ secrets.TELERIK_USER }}
+        telerik_password: ${{ secrets.TELERIK_PASSWORD }}
 
     - name: Run dotnet test
       shell: pwsh
