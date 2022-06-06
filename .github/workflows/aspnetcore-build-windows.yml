@@ -18,10 +18,18 @@ on:
         required: false
         type: string
         default: 'UWHealth'
-      nuget_feed_source: 
+      nuget_feed_source:
         required: false
         type: string
         default: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
+      telerik_feed_name: 
+        required: false
+        type: string
+        default: 'Telerik'
+      telerik_feed_source:
+        required: false
+        type: string
+        default: 'https://nuget.telerik.com/v3/index.json'
       nuget_config: 
         required: false
         type: string
@@ -60,8 +68,8 @@ jobs:
 #      if: ${{ secrets.telerik_user != ''}}
       shell: bash
       run: | 
-        dotnet nuget remove source Telerik --configfile ${{ inputs.nuget_config }}
-        dotnet nuget add source Telerik -n ${{ inputs.nuget_feed_name }} -u ${{ secrets.telerik_user }} -p ${{ secrets.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+        dotnet nuget remove source ${{ inputs.telerik_feed_name }} --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source ${{ inputs.telerik_feed_source }} -n ${{ inputs.telerik_feed_name }} -u ${{ secrets.telerik_user }} -p ${{ secrets.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
     - name: Checkout actions repository
       uses: actions/checkout@v3
