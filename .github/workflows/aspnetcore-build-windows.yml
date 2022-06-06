@@ -94,7 +94,7 @@ jobs:
       shell: pwsh
       run: |
         New-Item -Path ./.sonar/scanner -ItemType Directory
-        dotnet tool install --global dotnet-sonarscanner
+        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
     - name: Initialize SonarScanner
       env:
