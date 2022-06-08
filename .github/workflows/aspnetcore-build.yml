@@ -41,7 +41,11 @@ on:
         required: true
       package_pat:
         required: true
-        
+      telerik_user: 
+        required: false
+      telerik_password: 
+        required: false
+
 jobs:
   BuildTest:     
     name: Build and Test
