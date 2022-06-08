@@ -112,8 +112,7 @@ jobs:
       run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
 
     - name: Run dotnet build
-      #uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build-windows
-      uses: ./.github/actions/.github/workflows/aspnetcore-build-windows
+      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build-windows
       with:
         project_name: ${{ inputs.project_name }}
         package_pat: ${{ secrets.PACKAGE_PAT }}
