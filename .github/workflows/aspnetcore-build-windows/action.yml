@@ -69,7 +69,7 @@ runs:
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
 
     - name: Set up .npmrc file to for github packages
-      if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
+      #if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
