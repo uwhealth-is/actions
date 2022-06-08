@@ -57,6 +57,15 @@ runs:
         dotnet nuget remove source ${{ inputs.telerik_feed_name }} --configfile ${{ inputs.nuget_config }}
         dotnet nuget add source ${{ inputs.telerik_feed_source }} -n ${{ inputs.telerik_feed_name }} -u ${{ inputs.telerik_user }} -p ${{ inputs.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
 
+    - name: Set up .npmrc file for github packages
+      #if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
+      shell: bash
+      run: | 
+        cd ${{ inputs.project_name }}
+        npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
+        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
+        npm install
+
     - name: install Libman CLI and run it if libman.json exists
       if: ${{ hashFiles(format('**/{0}/libman.json', inputs.project_name)) != '' }}    
       shell: bash
@@ -68,15 +77,6 @@ runs:
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
 
-    - name: Set up .npmrc file to for github packages
-      #if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
-      shell: bash
-      run: | 
-        cd ${{ inputs.project_name }}
-        npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
-        npm install
-      
     - name: Build
       shell: bash
       run: dotnet build --configuration Release --no-restore
