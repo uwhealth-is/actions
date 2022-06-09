@@ -145,3 +145,15 @@ jobs:
       with:
         scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
       if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
+
+    - name: Run dotnet publish
+      shell: pwsh
+      run: |
+       cd ${{ inputs.project_name }}
+       dotnet publish -o ${{ github.workspace }}/publish
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: buildArtifact
+        path: ${{ github.workspace }}/publish
