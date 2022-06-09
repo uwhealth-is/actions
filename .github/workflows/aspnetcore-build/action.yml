@@ -77,4 +77,4 @@ runs:
       
     - name: Build
       shell: bash
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore -o ${{ github.workspace }}/build
