@@ -56,19 +56,29 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Remove default Azure DevOps NuGet feed
+    - name: Check for Azure Devops token to determine if telerik is needed in nuget feed
+      id: azuredevops
       shell: bash
-      run: dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+      run: echo '::set-output name=ado_secret::${{secrets.ado_token}}'
 
-    - name: Add UW Health Azure DevOps NuGet feed
+    - name: Update azure devops Nuget.Config entry
       shell: bash
-      run: dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+      run: |
+        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
+        dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+      if: steps.azuredevops.outputs.ado_secret != ''
 
-    - name: Remove and Update Telerik NuGet feed
+    - name: Check for Telerik Info to determine if telerik is needed in nuget feed
+      id: telerik
+      shell: bash
+      run: echo '::set-output name=telerik_secret::${{secrets.telerik_password}}'
+
+    - name: Update Telerik Nuget.Config entry
       shell: bash
       run: | 
         dotnet nuget remove source ${{ inputs.telerik_feed_name }} --configfile ${{ inputs.nuget_config }}
         dotnet nuget add source ${{ inputs.telerik_feed_source }} -n ${{ inputs.telerik_feed_name }} -u ${{ secrets.telerik_user }} -p ${{ secrets.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
+      if: steps.telerik.outputs.telerik_secret != ''
 
     - name: Checkout actions repository
       uses: actions/checkout@v3
