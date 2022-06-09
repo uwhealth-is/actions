@@ -133,4 +133,5 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
       uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
       with:
-        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"   
+        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
+      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
