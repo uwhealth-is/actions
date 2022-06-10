@@ -59,9 +59,7 @@ runs:
 
     - name: Restore NuGet packages (if not cached)
       shell: bash
-      run: |
-        cd ${{ inputs.project_name }} 
-        dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
+      run: dotnet restore --configfile ${{ inputs.nuget_config }}
 
     - name: Set up .npmrc file to for github packages
       if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
