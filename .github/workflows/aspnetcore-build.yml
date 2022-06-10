@@ -164,7 +164,12 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-        
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: artifact    
+    
     - name: Upload Release Asset
       if: success()
       id: upload-release-asset 
@@ -173,6 +178,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/build
-        asset_name: artifact
+        asset_path: ./artifact.zip
+        asset_name: artifact.zip
         asset_content_type: application/zip
