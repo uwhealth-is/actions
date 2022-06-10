@@ -147,7 +147,6 @@ jobs:
 #      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
 
     - name: Restore client side packages
-      if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
       shell: bash
       run: | 
         cd ${{ inputs.project_name }}
@@ -156,7 +155,6 @@ jobs:
         npm install
         npm i -g grunt
         grunt
-        rm node_modules
 
     - name: Build
       shell: bash
