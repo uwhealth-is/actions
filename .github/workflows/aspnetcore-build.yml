@@ -146,23 +146,23 @@ jobs:
 #        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
 #      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
 
-    - name: Build
-      shell: bash
-      run: |
-        cd ${{ inputs.project_name }}
-        dotnet publish --configuration Release --no-restore -o ${{ github.workspace }}/publish
-
     - name: Restore client side packages
       if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
       shell: bash
       run: | 
-        cd ${{ github.workspace }}/publish
+        cd ${{ inputs.project_name }}
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
         npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
         npm install
         npm i -g grunt
         grunt
         rm node_modules
+
+    - name: Build
+      shell: bash
+      run: |
+        cd ${{ inputs.project_name }}
+        dotnet publish --configuration Release --no-restore -o ${{ github.workspace }}/publish
         
     - name: Upload Build Artifact
       if: success()
