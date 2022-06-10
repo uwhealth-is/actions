@@ -148,7 +148,7 @@ jobs:
 
     - name: Zip Folder
       shell: bash
-      run: zip -r -j artifact.zip ${{ github.workspace }}/build
+      run: zip -r artifact.zip ${{ github.workspace }}/build
 
     - name: Upload Build Artifact
       if: success()
