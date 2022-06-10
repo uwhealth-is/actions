@@ -106,19 +106,19 @@ jobs:
         key: ${{ runner.os }}-sonar-scanner
         restore-keys: ${{ runner.os }}-sonar-scanner
       
-    - name: Install SonarCloud scanner
-      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-      shell: pwsh
-      run: |
-        New-Item -Path ./.sonar/scanner -ItemType Directory
-        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
+#    - name: Install SonarCloud scanner
+#      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+#      shell: pwsh
+#      run: |
+#        New-Item -Path ./.sonar/scanner -ItemType Directory
+#        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
-    - name: Initialize SonarScanner
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
-      shell: pwsh
-      run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
+#    - name: Initialize SonarScanner
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
+#      shell: pwsh
+#      run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
 
     - name: Run dotnet build
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
@@ -126,25 +126,25 @@ jobs:
         project_name: ${{ inputs.project_name }}
         package_pat: ${{ secrets.PACKAGE_PAT }}
 
-    - name: Run dotnet test
-      shell: pwsh
-      run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
+#    - name: Run dotnet test
+#      shell: pwsh
+#      run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
     
-    - name: End SonarScanner
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      shell: pwsh
-      run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+#    - name: End SonarScanner
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      shell: pwsh
+#      run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-    - name: SonarQube Quality Gate Check
-      env: 
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
-      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
-      with:
-        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
-      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
+#    - name: SonarQube Quality Gate Check
+#      env: 
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+#      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
+#      with:
+#        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
+#      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
 
     - name: Zip Folder
       shell: bash
