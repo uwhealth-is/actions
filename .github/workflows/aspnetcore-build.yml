@@ -151,7 +151,7 @@ jobs:
       run: | 
         cd ${{ inputs.project_name }}
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-        npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
+        npm config set //npm.pkg.github.com/:_authToken=${{ secrets.package_pat }}
         npm install
         npm i -g grunt
         grunt
