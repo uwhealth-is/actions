@@ -61,11 +61,6 @@ runs:
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }} --verbosity minimal
 
-    #- name: Get npm package file hash
-    #  shell: bash
-    #  id: npm-hash
-    #  run: echo "::set-output name=NPM_HASH::${{ hashFiles(format('**/{0}/package.json', inputs.project_name))) }}"
-
     - name: Set up .npmrc file to for github packages
       if: ${{ hashFiles(format('**/{0}/package.json', inputs.project_name)) != '' && inputs.package_pat != '' }}
       shell: bash
@@ -74,6 +69,8 @@ runs:
         npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
         npm config set //npm.pkg.github.com/:_authToken=${{ inputs.package_pat }}
         npm install
+        npm i -g grunt
+        grunt
       
     - name: Build
       shell: bash
