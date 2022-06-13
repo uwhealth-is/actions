@@ -125,6 +125,7 @@ jobs:
       with:
         project_name: ${{ inputs.project_name }}
         package_pat: ${{ secrets.PACKAGE_PAT }}
+        full_solution_build: false
 
 #    - name: Run dotnet test
 #      shell: pwsh
