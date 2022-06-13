@@ -169,12 +169,12 @@ jobs:
         zip -r ${{ github.workspace }}/artifact.zip ./
         popd
     
-    - name: Upload Build Artifact
-      if: success()
-      uses: actions/upload-artifact@v3
-      with:
-        name: artifact
-        path: ${{ github.workspace }}/artifact.zip
+#    - name: Upload Build Artifact
+#      if: success()
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: artifact
+#        path: ${{ github.workspace }}/artifact.zip
               
     - name: Create Release
       if: success()
