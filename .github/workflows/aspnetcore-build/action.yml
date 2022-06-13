@@ -6,6 +6,7 @@ inputs:
   full_solution_build: 
     required: false
     default: true
+    type: boolean
   ado_token:
     required: false
     default: ''
