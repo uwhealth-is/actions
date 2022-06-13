@@ -3,6 +3,9 @@ description: Build an ASP.NET Core application
 inputs:
   project_name:
     required: true
+  full_solution_build: 
+    required: false
+    default: true
   ado_token:
     required: false
     default: ''
@@ -61,8 +64,14 @@ runs:
       shell: bash
       run: dotnet restore --configfile ${{ inputs.nuget_config }}
         
-    - name: Build
+    - name: Full Solution Build
+      shell: bash
+      run: dotnet build --configuration Release --no-restore
+      if: ${{ inputs.full_solution_build == true }}
+
+    - name: Project Level Build
       shell: bash
       run: |
         cd ${{ inputs.project_name }}
         dotnet build --configuration Release --no-restore
+      if: ${{ inputs.full_solution_build == false }} 
