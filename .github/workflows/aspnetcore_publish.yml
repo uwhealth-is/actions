@@ -6,7 +6,7 @@ on:
       project_name:
         required: true
         type: string
-      project_name:
+      pipeline_name:
         required: false
         type: string
         default: ${{ inputs.project_name }}
