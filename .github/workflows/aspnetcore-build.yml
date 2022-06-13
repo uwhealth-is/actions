@@ -205,7 +205,6 @@ jobs:
       with:
         azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
         azure-pipeline-name: '${{ inputs.project_name }}'
-        # Set/Overwrite pipeline variables
-        #azure-pipeline-variables: # optional
+        azure-pipeline-variables: '{"AppSettings.Version": "${{ github.ref_name }}.${{ github.run_number }}"}'
         azure-devops-token: '${{ secrets.ado_token }}'
     
