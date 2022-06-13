@@ -157,11 +157,31 @@ jobs:
         npm i --location=global grunt
         grunt
 
+    - name: Install entity framework tool
+      shell: bash
+      run: dotnet tool install --global dotnet-ef --ignore-failed-sources
+    
+    - name: Create entity framework migrations sql script
+      shell: bash
+      run: dotnet ef migrations script --idempotent --no-build --configuration Release --project ${{ inputs.project_name }}.Data --output ${{ github.workspace }}/publish/migrations.sql
+    
     - name: dotnet publish
       shell: bash
       run: |
         cd ${{ inputs.project_name }}
         dotnet publish --configuration Release --no-restore -o ${{ github.workspace }}/publish
+    
+    - name: Copy report files to publish directory
+      shell: bash
+      run: |
+        cd ${{ inputs.project_name }}.Reports
+        cp -r *.rdl ${{ github.workspace }}/publish
+        
+    - name: Copy sql files to publish directory
+      shell: bash
+      run: |
+        cd ${{ inputs.project_name }}.Data
+        cp -r *.sql ${{ github.workspace }}/publish
     
     - name: zip publish files
       shell: bash
@@ -170,12 +190,12 @@ jobs:
         zip -r ${{ github.workspace }}/artifact.zip ./
         popd
     
-#    - name: Upload Build Artifact
-#      if: success()
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: artifact
-#        path: ${{ github.workspace }}/artifact.zip
+    - name: Upload Build Artifact
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: artifact
+        path: ${{ github.workspace }}/artifact.zip
               
     - name: Create Release
       if: success()
