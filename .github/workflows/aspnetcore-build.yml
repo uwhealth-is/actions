@@ -106,19 +106,19 @@ jobs:
         key: ${{ runner.os }}-sonar-scanner
         restore-keys: ${{ runner.os }}-sonar-scanner
       
-#    - name: Install SonarCloud scanner
-#      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-#      shell: pwsh
-#      run: |
-#        New-Item -Path ./.sonar/scanner -ItemType Directory
-#        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
+    - name: Install SonarCloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      shell: pwsh
+      run: |
+        New-Item -Path ./.sonar/scanner -ItemType Directory
+        dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
-#    - name: Initialize SonarScanner
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
-#      shell: pwsh
-#      run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
+    - name: Initialize SonarScanner
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
+      shell: pwsh
+      run: ./.sonar/scanner/dotnet-sonarscanner begin /k:"${{ inputs.project_name }}-UWHealth-is" /o:"uwhealth-is" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="${{ inputs.sonar_exclusions }}" /d:sonar.coverage.exclusions="${{ inputs.sonar_coverage_exclusions }}" /d:sonar.cs.cobertura.reportsPaths="**/coverage.cobertura.xml"
 
     - name: Run dotnet build
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
@@ -127,105 +127,22 @@ jobs:
         package_pat: ${{ secrets.PACKAGE_PAT }}
         full_solution_build: false
 
-#    - name: Run dotnet test
-#      shell: pwsh
-#      run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
+    - name: Run dotnet test
+      shell: pwsh
+      run: dotnet test --logger trx --results-directory TestResults -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput=coverage -p:ExcludeByFile=**/Views/**/* -p:Exclude=[*]*.Migrations.*
     
-#    - name: End SonarScanner
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#      shell: pwsh
-#      run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-#    - name: SonarQube Quality Gate Check
-#      env: 
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
-#      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
-#      with:
-#        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
-#      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
-
-    - name: Restore client side packages
-      shell: bash
-      run: | 
-        cd ${{ inputs.project_name }}
-        npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
-        npm config set //npm.pkg.github.com/:_authToken=${{ secrets.package_pat }}
-        npm install
-        npm i --location=global grunt
-        grunt
-
-    - name: Install entity framework tool
-      shell: bash
-      run: dotnet tool install --global dotnet-ef --ignore-failed-sources
-    
-    - name: Create entity framework migrations sql script
-      shell: bash
-      run: dotnet ef migrations script --idempotent --no-build --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/migrations.sql
-    
-    - name: dotnet publish
-      shell: bash
-      run: |
-        cd ${{ inputs.project_name }}
-        dotnet publish --configuration Release --no-restore -o ${{ github.workspace }}/publish
-    
-    - name: Copy report files to publish directory
-      shell: bash
-      run: |
-        cd ${{ inputs.project_name }}.Reports
-        cp -r *.rdl ${{ github.workspace }}/publish
-        
-    - name: Copy sql files to publish directory
-      shell: bash
-      run: |
-        cd ${{ inputs.project_name }}.Data
-        cp -r *.sql ${{ github.workspace }}/publish
-    
-    - name: zip publish files
-      shell: bash
-      run: |
-        pushd ${{ github.workspace }}/publish
-        zip -r ${{ github.workspace }}/artifact.zip ./
-        popd
-    
-    - name: Upload Build Artifact
-      if: success()
-      uses: actions/upload-artifact@v3
-      with:
-        name: artifact
-        path: ${{ github.workspace }}/artifact.zip
-              
-    - name: Create Release
-      if: success()
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ github.ref_name }}.${{ github.run_number }}
-        release_name: ${{ github.ref_name }}.${{ github.run_number }}
-        draft: false
-        prerelease: false
-    
-    - name: Upload Release Asset
-      if: success()
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
+    - name: End SonarScanner
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      shell: pwsh
+      run: ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+    - name: SonarQube Quality Gate Check
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+      uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/artifact.zip
-        asset_name: artifact.zip
-        asset_content_type: application/zip
-    
-    - name: Azure Pipelines Action
-      uses: Azure/pipelines@v1.2
-      with:
-        azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
-        azure-pipeline-name: '${{ inputs.project_name }}'
-        azure-pipeline-variables: '{"AppSettings.Version": "${{ github.ref_name }}.${{ github.run_number }}"}'
-        azure-devops-token: '${{ secrets.ado_token }}'
-    
+        scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
+      if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
