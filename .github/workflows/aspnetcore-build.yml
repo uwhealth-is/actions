@@ -204,7 +204,7 @@ jobs:
       uses: Azure/pipelines@v1.2
       with:
         azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
-        azure-pipeline-name: '${{ inputs.project_name }}_Release'
+        azure-pipeline-name: '${{ inputs.project_name }}'
         # Set/Overwrite pipeline variables
         #azure-pipeline-variables: # optional
         azure-devops-token: '${{ secrets.ado_token }}'
