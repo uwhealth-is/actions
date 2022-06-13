@@ -89,7 +89,7 @@ jobs:
     
     - name: Create entity framework migrations sql script
       shell: bash
-      run: dotnet ef migrations script --idempotent --no-build --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/migrations.sql
+      run: dotnet ef migrations script --idempotent --no-build --configuration Release --output ${{ github.workspace }}/publish/efmigrations.sql
     
     - name: dotnet publish
       shell: bash
