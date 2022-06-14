@@ -42,4 +42,4 @@ jobs:
           ${{ github.workspace }}/publish/*.sql
           ${{ github.workspace }}/publish/*.rdl
           ${{ github.workspace }}/publish/*.rds
-      if: ${{ hashFiles(" publish/* ") != '' }}
+      if: ${{ hashFiles('publish/*') != '' }}
