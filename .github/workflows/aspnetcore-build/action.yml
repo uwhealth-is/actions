@@ -9,9 +9,6 @@ inputs:
   ado_token:
     required: false
     default: ''
-  package_pat: 
-    required: false
-    default: ''
   nuget_feed_name: 
     required: false
     default: 'UWHealth'
