@@ -20,8 +20,37 @@ jobs:
     - name: Download build Artifact
       uses: actions/download-artifact@v3
       with:
-        name: artifact
-        
+        name: artifact   
+    
+    - name: Copy report files to reports directory
+      shell: bash
+      run: |
+        mkdir reports
+        cp -r *.rdl ${{ github.workspace }}/reports || :
+        cp -r *.rds ${{ github.workspace }}/reports || :
+
+    - name: zip report files
+      shell: bash
+      run: |
+        pushd ${{ github.workspace }}/reports
+        zip -r ${{ github.workspace }}/reports.zip ./
+        popd
+
+
+    - name: Copy sql files to procedures directory
+      shell: bash
+      run: |
+        mkdir procedures
+        cp -r *.sql ${{ github.workspace }}/procedures || :   
+    
+    - name: zip procedure files
+      shell: bash
+      run: |
+        pushd ${{ github.workspace }}/procedures
+        zip -r ${{ github.workspace }}/procedures.zip ./
+        popd
+      
+   
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -33,9 +62,9 @@ jobs:
         draft: false
         prerelease: false
     
-    - name: Upload Release Asset
+    - name: Upload Build Release Assets
       if: success()
-      id: upload-release-asset 
+      id: upload-build-release-asset 
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,6 +72,30 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  
         asset_path: ${{ github.workspace }}/artifact.zip
         asset_name: artifact.zip
+        asset_content_type: application/zip
+    
+    - name: Upload Reports Release Asset
+      if: success()
+      id: upload-report-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/reports.zip
+        asset_name: reports.zip
+        asset_content_type: application/zip   
+    
+    - name: Upload Procedures Release Asset
+      if: success()
+      id: upload-procedure-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/procedures.zip
+        asset_name: procedures.zip
         asset_content_type: application/zip
     
     - name: Azure Pipelines Action
