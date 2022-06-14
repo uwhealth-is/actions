@@ -7,8 +7,6 @@ on:
         required: true
         type: string
     secrets:
-      package_pat:
-        required: true
       ado_token:
         required: true
       telerik_user: 
