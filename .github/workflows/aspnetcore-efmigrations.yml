@@ -6,6 +6,10 @@ on:
       project_name:
         required: true
         type: string
+      nuget_config:
+        required: false
+        type: string
+        default: 'Nuget.config'
     secrets: 
       ado_token:
         required: true
