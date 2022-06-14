@@ -17,7 +17,7 @@ on:
 jobs:
   efmigrations:     
     name: Entity Framework Migration Script Creation
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions: write-all
     
     steps:      
