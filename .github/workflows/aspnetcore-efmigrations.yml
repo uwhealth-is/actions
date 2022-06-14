@@ -42,10 +42,6 @@ jobs:
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_password }}
 
-    - name: Create publish directory
-      shell: bash
-      run: mkdir publish
-
     - name: Create entity framework migrations sql script
       shell: bash
       run: dotnet ef migrations script --idempotent --configuration Release --no-build --project ${{ inputs.project_name }} --output efmigrations.sql
