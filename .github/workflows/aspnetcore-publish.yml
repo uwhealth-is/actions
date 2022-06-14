@@ -1,4 +1,4 @@
-name: ASP.NET Core Release and Publish
+name: ASP.NET Core Build and Publish
 
 on:
   workflow_call:
@@ -41,8 +41,8 @@ on:
         required: false
 
 jobs:
-  BuildTest:     
-    name: Build and Test
+  BuildAndPublish:     
+    name: BuildAndPublish
     runs-on: ubuntu-latest
     permissions: write-all
     
@@ -50,29 +50,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Check for Azure Devops token to determine if telerik is needed in nuget feed
-      id: azuredevops
-      shell: bash
-      run: echo '::set-output name=ado_secret::${{secrets.ado_token}}'
-
-    - name: Update azure devops Nuget.Config entry
-      shell: bash
-      run: |
-        dotnet nuget remove source ${{ inputs.nuget_feed_name }} --configfile ${{ inputs.nuget_config }}
-        dotnet nuget add source ${{ inputs.nuget_feed_source }} -n ${{ inputs.nuget_feed_name }} -u az -p ${{ secrets.ado_token }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
-      if: steps.azuredevops.outputs.ado_secret != ''
-
-    - name: Check for Telerik Info to determine if telerik is needed in nuget feed
-      id: telerik
-      shell: bash
-      run: echo '::set-output name=telerik_secret::${{secrets.telerik_password}}'
-
-    - name: Update Telerik Nuget.Config entry
-      shell: bash
-      run: | 
-        dotnet nuget remove source ${{ inputs.telerik_feed_name }} --configfile ${{ inputs.nuget_config }}
-        dotnet nuget add source ${{ inputs.telerik_feed_source }} -n ${{ inputs.telerik_feed_name }} -u ${{ secrets.telerik_user }} -p ${{ secrets.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
-      if: steps.telerik.outputs.telerik_secret != ''
+    - name: Checkout actions repository
+      uses: actions/checkout@v3
+      with:
+        repository: uwhealth-is/actions
+        path: ./.github/uwh-actions 
+		
+    - name: Run dotnet build
+      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
+      with:
+        project_name: ${{ inputs.project_name }}
+        package_pat: ${{ secrets.PACKAGE_PAT }}
+        telerik_user: ${{ secrets.telerik_user }}
+        telerik_password: ${{ secrets.telerik_user }}
+        full_solution_build: false
 
     - name: Restore client side packages
       shell: bash
@@ -83,33 +74,13 @@ jobs:
         npm install
         npm i --location=global grunt
         grunt
-    - name: Install entity framework tool
-      shell: bash
-      run: dotnet tool install --global dotnet-ef --ignore-failed-sources
-    
-    - name: Create entity framework migrations sql script
-      shell: bash
-      run: dotnet ef migrations script --idempotent --no-build --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
-    
+      
     - name: dotnet publish
       shell: bash
       run: |
         cd ${{ inputs.project_name }}
         dotnet publish --configuration Release -o ${{ github.workspace }}/publish
-    
-    - name: Copy report files to publish directory
-      shell: bash
-      run: |
-        cd ${{ inputs.project_name }}.Reports
-        cp -r *.rdl ${{ github.workspace }}/publish
-        
-    - name: Copy sql files to publish directory
-      shell: bash
-      run: |
-        cd ${{ inputs.project_name }}.Data
-        cp -r *.rdl ${{ github.workspace }}/publish
-        cp -r *.rds ${{ github.workspace }}/publish
-        
+         
     - name: zip publish files
       shell: bash
       run: |
@@ -124,35 +95,5 @@ jobs:
         name: artifact
         path: ${{ github.workspace }}/artifact.zip
               
-    - name: Create Release
-      if: success()
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ github.ref_name }}.${{ github.run_number }}
-        release_name: ${{ github.ref_name }}.${{ github.run_number }}
-        draft: false
-        prerelease: false
-    
-    - name: Upload Release Asset
-      if: success()
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/artifact.zip
-        asset_name: artifact.zip
-        asset_content_type: application/zip
-    
-    - name: Azure Pipelines Action
-      uses: Azure/pipelines@v1.2
-      with:
-        azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
-        azure-pipeline-name: '${{ inputs.project_name }}'
-        azure-pipeline-variables: '{"AppSettings.Version": "${{ github.ref_name }}.${{ github.run_number }}"}'
-        azure-devops-token: '${{ secrets.ado_token }}'
+   
    
