@@ -1,0 +1,52 @@
+name: ASP.NET Core Release
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string     
+    secrets:
+      ado_token:
+        required: true
+
+jobs:
+  Release:     
+    name: Release
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifact
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref_name }}.${{ github.run_number }}
+        release_name: ${{ github.ref_name }}.${{ github.run_number }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload Release Asset
+      if: success()
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/artifact.zip
+        asset_name: artifact.zip
+        asset_content_type: application/zip
+    
+    - name: Azure Pipelines Action
+      uses: Azure/pipelines@v1.2
+      with:
+        azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
+        azure-pipeline-name: '${{ inputs.project_name }}'
+        azure-pipeline-variables: '{"AppSettings.Version": "${{ github.ref_name }}.${{ github.run_number }}"}'
+        azure-devops-token: '${{ secrets.ado_token }}'
