@@ -26,7 +26,7 @@ jobs:
 
     - name: Install entity framework tool
       shell: bash
-      run: dotnet tool install --global dotnet-ef --ignore-failed-sources --version 6.0.5
+      run: dotnet tool install --global dotnet-ef --ignore-failed-sources --version 5.0.7
     
     - name: Checkout actions repository
       uses: actions/checkout@v3
@@ -44,7 +44,7 @@ jobs:
     
     - name: Create entity framework migrations sql script
       shell: bash
-      run: dotnet ef migrations script --idempotent --configuration Release --no-build --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
+      run: dotnet ef migrations script --idempotent --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
