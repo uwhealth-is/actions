@@ -24,11 +24,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Install entity framework tool
+      shell: bash
+      run: dotnet tool install --global dotnet-ef --ignore-failed-sources
+    
     - name: Checkout actions repository
       uses: actions/checkout@v3
       with:
         repository: uwhealth-is/actions
-        path: ./.github/workflows
+        path: ./.github/uwh-actions
 		
     - name: Run dotnet build
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
@@ -38,10 +42,6 @@ jobs:
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_password }}
         full_solution_build: false
- 
-    - name: Install entity framework tool
-      shell: bash
-      run: dotnet tool install --global dotnet-ef --ignore-failed-sources
     
     - name: Create entity framework migrations sql script
       shell: bash
