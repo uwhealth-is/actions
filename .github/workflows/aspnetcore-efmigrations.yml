@@ -15,9 +15,9 @@ on:
         required: false
 
 jobs:
-  BuildTest:     
-    name: Build and Test
-    runs-on: windows-latest
+  efigrations:     
+    name: Entity Framework Migrations Script Creation
+    runs-on: ubuntu-latest
     permissions: write-all
     
     steps:      
@@ -27,25 +27,10 @@ jobs:
     - name: Install entity framework tool
       shell: bash
       run: dotnet tool install --global dotnet-ef --ignore-failed-sources
-    
-    - name: Checkout actions repository
-      uses: actions/checkout@v3
-      with: 
-        path: ./.github/uwh-actions
-        repository: uwhealth-is/actions
-
-    - name: Run dotnet build
-      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
-      with:
-        project_name: ${{ inputs.project_name }}
-        ado_token: ${{ secrets.ado_token }}
-        telerik_user: ${{ secrets.telerik_user }}
-        telerik_password: ${{ secrets.telerik_password }}
-        full_solution_build: false
-    
+       
     - name: Create entity framework migrations sql script
       shell: bash
-      run: dotnet ef migrations script --idempotent --configuration Release --no-build --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
+      run: dotnet ef migrations script --idempotent --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
