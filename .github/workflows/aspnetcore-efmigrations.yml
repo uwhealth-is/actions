@@ -1,5 +1,28 @@
+name: ASP.NET Core Ef Migrations
 
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
+    secrets:
+      package_pat:
+        required: true
+      telerik_user: 
+        required: false
+      telerik_password: 
+        required: false
 
+jobs:
+  BuildTest:     
+    name: Build and Test
+    runs-on: ubuntu-latest
+    permissions: write-all
+    
+    steps:      
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Checkout actions repository
       uses: actions/checkout@v3
@@ -12,4 +35,22 @@
       with:
         project_name: ${{ inputs.project_name }}
         package_pat: ${{ secrets.PACKAGE_PAT }}
+        telerik_user: ${{ secrets.telerik_user }}
+        telerik_password: ${{ secrets.telerik_password }}
         full_solution_build: false
+ 
+    - name: Install entity framework tool
+      shell: bash
+      run: dotnet tool install --global dotnet-ef --ignore-failed-sources
+    
+    - name: Create entity framework migrations sql script
+      shell: bash
+      run: dotnet ef migrations script --idempotent --no-build --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: artifact
+        path: ${{ github.workspace }}/publish/efmigrations.sql
+
+
