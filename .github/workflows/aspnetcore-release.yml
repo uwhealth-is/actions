@@ -16,7 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
 
-    - uses: actions/download-artifact@v3
+    steps: 
+    - name: Download build Artifact
+      uses: actions/download-artifact@v3
       with:
         name: artifact
         
