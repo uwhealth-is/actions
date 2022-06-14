@@ -6,13 +6,6 @@ on:
       project_name:
         required: true
         type: string
-    secrets:
-      package_pat:
-        required: true
-      telerik_user: 
-        required: false
-      telerik_password: 
-        required: false
 
 jobs:
   BuildTest:     
