@@ -5,31 +5,7 @@ on:
     inputs:
       project_name:
         required: true
-        type: string
-      pipeline_name:
-        required: false
-        type: string
-        default: ${{ inputs.project_name }}
-      nuget_feed_name: 
-        required: false
-        type: string
-        default: 'UWHealth'
-      nuget_feed_source: 
-        required: false
-        type: string
-        default: 'https://pkgs.dev.azure.com/uwhealth/_packaging/UWHealth_Package_Feed_Updated/nuget/v3/index.json'
-      telerik_feed_name: 
-        required: false
-        type: string
-        default: 'Telerik'
-      telerik_feed_source:
-        required: false
-        type: string
-        default: 'https://nuget.telerik.com/v3/index.json'
-      nuget_config: 
-        required: false
-        type: string
-        default: 'Nuget.config'
+        type: string    
     secrets:
       package_pat:
         required: true
