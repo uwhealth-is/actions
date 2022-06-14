@@ -17,7 +17,7 @@ on:
 jobs:
   efmigrations:     
     name: Entity Framework Migration Script Creation
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions: write-all
     
     steps:      
@@ -48,10 +48,10 @@ jobs:
 
     - name: Create entity framework migrations sql script
       shell: bash
-      run: dotnet ef migrations script --idempotent --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
+      run: dotnet ef migrations script --idempotent --configuration Release --no-build --project ${{ inputs.project_name }} --output ${{ github.workspace }}\publish\efmigrations.sql
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: artifact
-        path: ${{ github.workspace }}/publish/efmigrations.sql
+        path: ${{ github.workspace }}\publish\efmigrations.sql
