@@ -6,13 +6,15 @@ on:
       project_name:
         required: true
         type: string
-    secrets:
       ado_token:
         required: true
+        type: string
       telerik_user: 
         required: false
+        type: string
       telerik_password: 
         required: false
+        type: string
 
 jobs:
   efigrations:     
