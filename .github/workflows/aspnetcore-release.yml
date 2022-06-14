@@ -41,7 +41,7 @@ jobs:
       shell: bash
       run: |
         mkdir procedures
-        cp -r *.sql ${{ github.workspace }}/procedures || :   
+        cp -r *.sql ${{ github.workspace }}/procedures --exclude efmigrations.sql || :   
     
     - name: zip procedure files
       shell: bash
@@ -97,6 +97,18 @@ jobs:
         asset_path: ${{ github.workspace }}/procedures.zip
         asset_name: procedures.zip
         asset_content_type: application/zip
+        
+    - name: Upload Migration Release Asset
+      if: success()
+      id: upload-migration-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/efmigrations.sql
+        asset_name: efmigrations.sql
+        asset_content_type: application/sql
     
     - name: Azure Pipelines Action
       uses: Azure/pipelines@v1.2
