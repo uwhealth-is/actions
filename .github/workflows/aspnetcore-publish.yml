@@ -55,19 +55,20 @@ jobs:
         cd ${{ inputs.project_name }}
         dotnet publish --configuration Release -o ${{ github.workspace }}/publish
          
-    - name: zip publish files
-      shell: bash
-      run: |
-        pushd ${{ github.workspace }}/publish
-        zip -r ${{ github.workspace }}/artifact.zip ./
-        popd
+#    - name: zip publish files
+#      shell: bash
+#      run: |
+#        pushd ${{ github.workspace }}/publish
+#        zip -r ${{ github.workspace }}/artifact.zip ./
+#        popd
     
     - name: Upload Build Artifact
       if: success()
       uses: actions/upload-artifact@v3
       with:
         name: artifact
-        path: ${{ github.workspace }}/artifact.zip
+        path: ${{ github.workspace }}/publish
+#        path: ${{ github.workspace }}/artifact.zip
               
    
    
