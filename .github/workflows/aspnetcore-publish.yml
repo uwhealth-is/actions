@@ -34,7 +34,6 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-        #package_pat: ${{ secrets.PACKAGE_PAT }}
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_user }}
         full_solution_build: false
