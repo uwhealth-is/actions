@@ -9,6 +9,8 @@ on:
     secrets:
       package_pat:
         required: true
+      ado_token:
+        required: true
       telerik_user: 
         required: false
       telerik_password: 
@@ -38,7 +40,7 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-        package_pat: ${{ secrets.PACKAGE_PAT }}
+        ado_token: ${{ secrets.ado_token }}
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_password }}
         full_solution_build: false
