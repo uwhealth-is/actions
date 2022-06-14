@@ -48,10 +48,10 @@ jobs:
 
     - name: Create entity framework migrations sql script
       shell: bash
-      run: dotnet ef migrations script --idempotent --configuration Release --no-build --project ${{ inputs.project_name }} --output ${{ github.workspace }}\publish\efmigrations.sql
+      run: dotnet ef migrations script --idempotent --configuration Release --no-build --project ${{ inputs.project_name }} --output efmigrations.sql
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: artifact
-        path: ${{ github.workspace }}\publish\efmigrations.sql
+        path: ${{ github.workspace }}\efmigrations.sql
