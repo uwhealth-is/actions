@@ -17,7 +17,7 @@ on:
 jobs:
   efmigrations:     
     name: Entity Framework Migration Script Creation
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions: write-all
     
     steps:      
@@ -41,13 +41,17 @@ jobs:
         ado_token: ${{ secrets.ado_token }}
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_password }}
-    
+
+    - name: Create publish directory
+      shell: bash
+      run: mkdir publish
+
     - name: Create entity framework migrations sql script
       shell: bash
-      run: dotnet ef migrations script --idempotent --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}\publish\efmigrations.sql
+      run: dotnet ef migrations script --idempotent --configuration Release --project ${{ inputs.project_name }} --output ${{ github.workspace }}/publish/efmigrations.sql
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
         name: artifact
-        path: ${{ github.workspace }}\publish\efmigrations.sql
+        path: ${{ github.workspace }}/publish/efmigrations.sql
