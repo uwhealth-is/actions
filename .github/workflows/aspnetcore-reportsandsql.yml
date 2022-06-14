@@ -16,7 +16,11 @@ jobs:
     steps:      
     - name: Checkout repository
       uses: actions/checkout@v3
-        
+
+    - name: Create publish directory
+      shell: bash
+      run: mkdir publish
+       
     - name: Copy report files to publish directory
       shell: bash
       run: |
@@ -30,7 +34,7 @@ jobs:
         cd ${{ inputs.project_name }}.Data
         cp -r *.sql ${{ github.workspace }}/publish
 
-    - name: Upload a Build Artifact
+    - name: Upload files as Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
         name: artifact
@@ -38,3 +42,4 @@ jobs:
           ${{ github.workspace }}/publish/*.sql
           ${{ github.workspace }}/publish/*.rdl
           ${{ github.workspace }}/publish/*.rds
+      if: ${{ hashFiles(" publish/* ") != '' }}
