@@ -32,7 +32,7 @@ jobs:
       shell: bash
       run: |
         cd ${{ inputs.project_name }}.Data
-        cp -r *.sql ${{ github.workspace }}/publish || :
+        cp -r **/*.sql ${{ github.workspace }}/publish || :
 
     - name: Upload files as Build Artifacts
       uses: actions/upload-artifact@v3.1.0
