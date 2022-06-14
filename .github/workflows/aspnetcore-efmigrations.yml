@@ -28,7 +28,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: uwhealth-is/actions
-        path: ./.github/uwh-actions 
+        path: ./.github/uwh-actions
 		
     - name: Run dotnet build
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
