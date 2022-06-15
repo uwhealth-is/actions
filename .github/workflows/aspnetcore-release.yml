@@ -41,7 +41,7 @@ jobs:
       shell: bash
       run: |
         mkdir procedures
-        cp -r `*.sql | grep -v "efmigrations.sql"` ${{ github.workspace }}/procedures || :       
+        grep --exclude efmigrations.sql *.sql ./ | xargs cp -t ${{ github.workspace }}/procedures || :       
     
     - name: zip procedure files
       shell: bash
