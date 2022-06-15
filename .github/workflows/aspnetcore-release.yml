@@ -41,7 +41,8 @@ jobs:
       run: |
         mkdir procedures
         cp -r *.sql ${{ github.workspace }}/procedures || :
-        rm -f efmigrations.sql
+        cd procedures
+        cp -r efmigrations.sql ${{ github.workspace }} || : 
         
     - name: zip procedure files
       shell: bash
