@@ -36,20 +36,19 @@ jobs:
         zip -r ${{ github.workspace }}/reports.zip ./
         popd
 
-
     - name: Copy sql files to procedures directory
       shell: bash
       run: |
         mkdir procedures
-        grep --exclude efmigrations.sql *.sql | xargs -Ifiles cp -t files ${{ github.workspace }}/procedures || :       
-    
+        cp -r *.sql ${{ github.workspace }}/procedures || :
+        rm -f efmigrations.sql
+        
     - name: zip procedure files
       shell: bash
       run: |
         pushd ${{ github.workspace }}/procedures
         zip -r ${{ github.workspace }}/procedures.zip ./
-        popd
-      
+        popd      
    
     - name: Create Release
       id: create_release
