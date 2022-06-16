@@ -21,8 +21,17 @@ jobs:
     permissions: write-all
     
     steps:      
-    - name: Checkout repository
-      uses: actions/checkout@v3
+#    - name: Checkout repository
+#      uses: actions/checkout@v3
+
+    - name: Download build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: build
+      
+    - name: Unzip build
+      shell: bash
+      run: unzip build.zip
 
     - name: Install entity framework tool
       shell: bash
@@ -34,13 +43,13 @@ jobs:
         path: ./.github/uwh-actions
         repository: uwhealth-is/actions
 
-    - name: Run dotnet build
-      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
-      with:
-        project_name: ${{ inputs.project_name }}
-        ado_token: ${{ secrets.ado_token }}
-        telerik_user: ${{ secrets.telerik_user }}
-        telerik_password: ${{ secrets.telerik_password }}
+#    - name: Run dotnet build
+#      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
+#      with:
+#        project_name: ${{ inputs.project_name }}
+#        ado_token: ${{ secrets.ado_token }}
+#        telerik_user: ${{ secrets.telerik_user }}
+#        telerik_password: ${{ secrets.telerik_password }}
 
     - name: Create entity framework migrations sql script
       shell: bash
