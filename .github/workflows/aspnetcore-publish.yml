@@ -60,7 +60,7 @@ jobs:
       shell: bash
       run: |
         cd ${{ inputs.project_name }}
-        dotnet publish --configuration Release -o ${{ github.workspace }}/publish
+        dotnet publish --no-restore --configuration Release -o ${{ github.workspace }}/publish
          
     - name: zip publish files
       shell: bash
