@@ -41,6 +41,7 @@ jobs:
         ado_token: ${{ secrets.ado_token }}
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_password }}
+        full_solution_build: false
 
     - name: Create entity framework migrations sql script
       shell: bash
