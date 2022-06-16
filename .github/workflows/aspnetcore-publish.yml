@@ -39,7 +39,6 @@ jobs:
         ado_token: ${{ secrets.ado_token }}
         telerik_user: ${{ secrets.telerik_user }}
         telerik_password: ${{ secrets.telerik_user }}
-        full_solution_build: false
 
     - name: Restore client side packages
       shell: bash
