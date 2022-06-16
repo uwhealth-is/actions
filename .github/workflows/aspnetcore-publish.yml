@@ -5,7 +5,11 @@ on:
     inputs:
       project_name:
         required: true
-        type: string    
+        type: string
+      nuget_config: 
+        required: false
+        default: 'Nuget.config'
+        type: string
     secrets:
       ado_token:
         required: true
@@ -60,7 +64,8 @@ jobs:
       shell: bash
       run: |
         cd ${{ inputs.project_name }}
-        dotnet publish --no-restore --configuration Release -o ${{ github.workspace }}/publish
+        dotnet restore --configfile ${{ inputs.nuget_config }}
+        dotnet publish --configuration Release -o ${{ github.workspace }}/publish
          
     - name: zip publish files
       shell: bash
