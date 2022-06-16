@@ -63,8 +63,8 @@ jobs:
     - name: dotnet publish
       shell: bash
       run: |
-        cd ${{ inputs.project_name }}
         dotnet restore --configfile ${{ inputs.nuget_config }}
+        cd ${{ inputs.project_name }}
         dotnet publish --configuration Release -o ${{ github.workspace }}/publish
          
     - name: zip publish files
