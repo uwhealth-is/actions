@@ -35,7 +35,7 @@ jobs:
 
     - name: Install entity framework tool
       shell: bash
-      run: dotnet tool install --global dotnet-ef --ignore-failed-sources --version 6.0.5
+      run: dotnet tool install --global dotnet-ef --ignore-failed-sources --version 6.0.*
     
     - name: Checkout actions repository
       uses: actions/checkout@v3
