@@ -55,12 +55,9 @@ jobs:
           path: ./.github/uwh-actions 
           
       - name: Entity Framework Migrations
-        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-efmigrations
         with:
           project_name: ${{ inputs.project_name }}  
-          ado_token: ${{ secrets.ado_token }}
-          telerik_user: ${{ secrets.telerik_user }}
-          telerik_password: ${{ secrets.telerik_password }}
             
   publish:  
     runs-on: ubuntu-latest
@@ -76,10 +73,7 @@ jobs:
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
         with:
           project_name: ${{ inputs.project_name }}  
-          ado_token: ${{ secrets.ado_token }}
           package_pat: ${{ secrets.package_pat }}
-          telerik_user: ${{ secrets.telerik_user }}
-          telerik_password: ${{ secrets.telerik_password }}
       
   reportsandsql:
     runs-on: ubuntu-latest
