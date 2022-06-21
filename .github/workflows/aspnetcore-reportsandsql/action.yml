@@ -1,2 +1,39 @@
+name: ASP.NET Core Ef Migrations
+
+inputs:
+  project_name:
+    required: true
+    type: string
+
 runs:
   using: "composite"
+  steps:      
+  - name: Checkout repository
+    uses: actions/checkout@v3
+
+  - name: Create publish directory
+    shell: bash
+    run: mkdir publish
+       
+  - name: Copy report files to publish directory
+    shell: bash
+    run: |
+      cd ${{ inputs.project_name }}.Reports
+      cp -r *.rdl ${{ github.workspace }}/publish || :
+      cp -r *.rds ${{ github.workspace }}/publish || :
+                
+  - name: Copy sql files to publish directory
+    shell: bash
+    run: |
+      cd ${{ inputs.project_name }}.Data
+      cp -r **/*.sql ${{ github.workspace }}/publish || :
+  
+  - name: Upload files as Build Artifacts
+    uses: actions/upload-artifact@v3.1.0
+    with:
+      name: artifact
+      path: |
+        ${{ github.workspace }}/publish/*.sql
+        ${{ github.workspace }}/publish/*.rdl
+        ${{ github.workspace }}/publish/*.rds
+    if: ${{ hashFiles('publish/*') != '' }}
