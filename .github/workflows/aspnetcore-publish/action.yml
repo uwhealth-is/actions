@@ -1,1 +1,55 @@
+name: ASP.NET Core Publish Artifact
 
+inputs:
+  project_name:
+    required: true
+    type: string
+  package_pat:
+    required: true
+  nuget_config: 
+    required: false
+    default: 'Nuget.config'
+    type: string
+
+runs:
+  using: "composite" 
+  steps:      
+  - name: Download build Artifact
+    uses: actions/download-artifact@v3
+    with:
+      name: build
+    
+  - name: Unzip build
+    shell: bash
+    run: unzip build.zip
+
+  - name: Restore client side packages
+    shell: bash
+    run: | 
+      cd ${{ inputs.project_name }}
+      npm config set @uwhealth-is:registry=https://npm.pkg.github.com/
+      npm config set //npm.pkg.github.com/:_authToken=${{ input.package_pat }}
+      npm install
+      npm i --location=global grunt
+      grunt
+    
+  - name: dotnet publish
+    shell: bash
+    run: |
+      dotnet restore --configfile ${{ inputs.nuget_config }}
+      cd ${{ inputs.project_name }}
+      dotnet publish --configuration Release -o ${{ github.workspace }}/publish
+       
+  - name: zip publish files
+    shell: bash
+    run: |
+      pushd ${{ github.workspace }}/publish
+      zip -r ${{ github.workspace }}/artifact.zip ./
+      popd
+  
+  - name: Upload Build Artifact
+    if: success()
+    uses: actions/upload-artifact@v3
+    with:
+      name: artifact
+      path: ${{ github.workspace }}/artifact.zip
