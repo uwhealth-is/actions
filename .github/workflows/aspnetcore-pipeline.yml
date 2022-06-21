@@ -106,4 +106,3 @@ jobs:
           azure-pipeline-name: '${{ inputs.project_name }}_Production'
           azure-pipeline-variables: '{"AppSettings.Version": "${{ github.run_number }}", "AppSettings.Environment": "Test"}'
           azure-devops-token: '${{ secrets.ado_token }}'
-Loading complete
