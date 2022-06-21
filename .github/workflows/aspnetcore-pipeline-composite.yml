@@ -28,6 +28,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+          
       - name: Build / Test / Analyze
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
         with:
@@ -42,6 +48,12 @@ jobs:
     runs-on: windows-latest
     needs: [build] 
     steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+          
       - name: Entity Framework Migrations
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
         with:
@@ -54,6 +66,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build] 
     steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+      
       - name: Publish
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
         with:
@@ -66,6 +84,12 @@ jobs:
   reportsandsql:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+      
       - name: Reports and SQL
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
         with:
@@ -75,6 +99,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build, reportsandsql, efmigrations, publish] 
     steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+      
       - name: Release
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
         with:
