@@ -27,60 +27,59 @@ on:
 jobs:    
   build:
     runs-on: ubuntu-latest
-    needs: [build] 
-      steps:
-        - name: Build / Test / Analyze
-          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
-          with:
-            project_name: ${{ inputs.project_name }}  
-            ado_token: ${{ secrets.ado_token }}
-            sonar_token: ${{ secrets.sonar_token }}
-            package_pat: ${{ secrets.package_pat }}
-            telerik_user: ${{ secrets.telerik_user }}
-            telerik_password: ${{ secrets.telerik_password }}  
+    steps:
+      - name: Build / Test / Analyze
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
+        with:
+          project_name: ${{ inputs.project_name }}  
+          ado_token: ${{ secrets.ado_token }}
+          sonar_token: ${{ secrets.sonar_token }}
+          package_pat: ${{ secrets.package_pat }}
+          telerik_user: ${{ secrets.telerik_user }}
+          telerik_password: ${{ secrets.telerik_password }}  
             
   efmigrations:
     runs-on: windows-latest
     needs: [build] 
-      steps:
-        - name: Entity Framework Migrations
-          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
-          with:
-            project_name: ${{ inputs.project_name }}  
-            ado_token: ${{ secrets.ado_token }}
-            telerik_user: ${{ secrets.telerik_user }}
-            telerik_password: ${{ secrets.telerik_password }}
+    steps:
+      - name: Entity Framework Migrations
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
+        with:
+          project_name: ${{ inputs.project_name }}  
+          ado_token: ${{ secrets.ado_token }}
+          telerik_user: ${{ secrets.telerik_user }}
+          telerik_password: ${{ secrets.telerik_password }}
             
   publish:  
     runs-on: ubuntu-latest
     needs: [build] 
-      steps:
-        - name: Publish
-          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
-          with:
-            project_name: ${{ inputs.project_name }}  
-            ado_token: ${{ secrets.ado_token }}
-            package_pat: ${{ secrets.package_pat }}
-            telerik_user: ${{ secrets.telerik_user }}
-            telerik_password: ${{ secrets.telerik_password }}
+    steps:
+      - name: Publish
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
+        with:
+          project_name: ${{ inputs.project_name }}  
+          ado_token: ${{ secrets.ado_token }}
+          package_pat: ${{ secrets.package_pat }}
+          telerik_user: ${{ secrets.telerik_user }}
+          telerik_password: ${{ secrets.telerik_password }}
       
   reportsandsql:
     runs-on: ubuntu-latest
-      steps:
-        - name: Reports and SQL
-          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
-          with:
-            project_name: ${{ inputs.project_name }}
+    steps:
+      - name: Reports and SQL
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+        with:
+          project_name: ${{ inputs.project_name }}
 
   release: 
     runs-on: ubuntu-latest
     needs: [build, reportsandsql, efmigrations, publish] 
-      steps:
-        - name: Release
-          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
-          with:
-            project_name: ${{ inputs.project_name }}
-            ado_token: ${{ secrets.ado_token }}
+    steps:
+      - name: Release
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
+        with:
+          project_name: ${{ inputs.project_name }}
+          ado_token: ${{ secrets.ado_token }}
       
   deployment-development:
     runs-on: ubuntu-latest
