@@ -1,0 +1,115 @@
+name: AspNetCore Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      project_name:
+        required: true
+        type: string
+      application_dev_url: 
+        required: true
+        type: string
+      application_test_url:
+        required: true
+        type: string
+    secrets:
+      ado_token:
+        required: true
+      sonar_token:
+        required: true
+      package_pat:
+        required: true
+      telerik_user: 
+        required: false
+      telerik_password: 
+        required: false
+
+jobs:    
+  build:
+    runs-on: ubuntu-latest
+    needs: [build] 
+      steps:
+        - name: Build / Test / Analyze
+          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
+          with:
+            project_name: ${{ inputs.project_name }}  
+            ado_token: ${{ secrets.ado_token }}
+            sonar_token: ${{ secrets.sonar_token }}
+            package_pat: ${{ secrets.package_pat }}
+            telerik_user: ${{ secrets.telerik_user }}
+            telerik_password: ${{ secrets.telerik_password }}  
+            
+  efmigrations:
+    runs-on: windows-latest
+    needs: [build] 
+      steps:
+        - name: Entity Framework Migrations
+          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
+          with:
+            project_name: ${{ inputs.project_name }}  
+            ado_token: ${{ secrets.ado_token }}
+            telerik_user: ${{ secrets.telerik_user }}
+            telerik_password: ${{ secrets.telerik_password }}
+            
+  publish:  
+    runs-on: ubuntu-latest
+    needs: [build] 
+      steps:
+        - name: Publish
+          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
+          with:
+            project_name: ${{ inputs.project_name }}  
+            ado_token: ${{ secrets.ado_token }}
+            package_pat: ${{ secrets.package_pat }}
+            telerik_user: ${{ secrets.telerik_user }}
+            telerik_password: ${{ secrets.telerik_password }}
+      
+  reportsandsql:
+    runs-on: ubuntu-latest
+      steps:
+        - name: Reports and SQL
+          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+          with:
+            project_name: ${{ inputs.project_name }}
+
+  release: 
+    runs-on: ubuntu-latest
+    needs: [build, reportsandsql, efmigrations, publish] 
+      steps:
+        - name: Release
+          uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
+          with:
+            project_name: ${{ inputs.project_name }}
+            ado_token: ${{ secrets.ado_token }}
+      
+  deployment-development:
+    runs-on: ubuntu-latest
+    environment: 
+      name: Development
+      url: ${{ inputs.application_dev_url }}
+    needs: [release]
+    if: ${{ github.ref_name != 'main' }}
+    steps:
+      - name: Azure Pipelines Action
+        uses: Azure/pipelines@v1.2
+        with:
+          azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
+          azure-pipeline-name: '${{ inputs.project_name }}_Development'
+          azure-pipeline-variables: '{"AppSettings.Version": "${{ github.run_number }}", "AppSettings.Environment": "Development"}'
+          azure-devops-token: '${{ secrets.ado_token }}'
+        
+  deployment-test:  
+    runs-on: ubuntu-latest
+    environment: 
+      name: Test
+      url: ${{ inputs.application_test_url }}   
+    needs: [release]
+    if: ${{ github.ref_name == 'main' }}    
+    steps:
+      - name: Azure Pipelines Action
+        uses: Azure/pipelines@v1.2
+        with:
+          azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
+          azure-pipeline-name: '${{ inputs.project_name }}_Production'
+          azure-pipeline-variables: '{"AppSettings.Version": "${{ github.run_number }}", "AppSettings.Environment": "Test"}'
+          azure-devops-token: '${{ secrets.ado_token }}'
