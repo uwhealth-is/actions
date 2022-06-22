@@ -85,6 +85,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
 
       - name: Reports and SQL
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
