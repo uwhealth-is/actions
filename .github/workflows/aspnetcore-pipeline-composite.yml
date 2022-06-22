@@ -75,19 +75,12 @@ jobs:
           project_name: ${{ inputs.project_name }}  
           package_pat: ${{ secrets.package_pat }}
       
-  reportsandsql:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout actions repository
-        uses: actions/checkout@v3
-        with:
-          repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
-      
-      - name: Reports and SQL
-        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
-        with:
-          project_name: ${{ inputs.project_name }}
+  reportsandsql:     
+    name: Reports and SQL
+    uses: uwhealth-is/actions/.github/workflows/aspnetcore-publish.yml@main
+    #uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+    with:
+      project_name: ${{ inputs.project_name }}
 
   release: 
     runs-on: ubuntu-latest
