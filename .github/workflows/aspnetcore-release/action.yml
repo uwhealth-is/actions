@@ -8,6 +8,12 @@ inputs:
 runs:
   using: "composite"
   steps: 
+    - name: Checkout actions repository
+      uses: actions/checkout@v3
+      with:
+        repository: uwhealth-is/actions
+        path: ./.github/uwh-actions
+      
     - name: Download build Artifact
       uses: actions/download-artifact@v3
       with:
@@ -19,12 +25,14 @@ runs:
         mkdir reports
         cp -r *.rdl ${{ github.workspace }}/reports || :
         cp -r *.rds ${{ github.workspace }}/reports || :
+
     - name: zip report files
       shell: bash
       run: |
         pushd ${{ github.workspace }}/reports
         zip -r ${{ github.workspace }}/reports.zip ./
         popd
+    
     - name: Copy sql files to procedures directory
       shell: bash
       run: |
