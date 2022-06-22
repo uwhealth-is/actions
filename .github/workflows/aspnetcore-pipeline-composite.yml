@@ -12,6 +12,9 @@ on:
       application_test_url:
         required: true
         type: string
+      calling_repo:
+        required: true
+        type: string
     secrets:
       ado_token:
         required: true
@@ -76,11 +79,19 @@ jobs:
           package_pat: ${{ secrets.package_pat }}
       
   reportsandsql:     
-    name: Reports and SQL
-    uses: uwhealth-is/actions/.github/workflows/aspnetcore-publish.yml@main
-    #uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
-    with:
-      project_name: ${{ inputs.project_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+
+      - name: Reports and SQL
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+        with:
+          project_name: ${{ inputs.project_name }}
+          calling_repo: ${{ inputs.calling_repo }}
 
   release: 
     runs-on: ubuntu-latest
