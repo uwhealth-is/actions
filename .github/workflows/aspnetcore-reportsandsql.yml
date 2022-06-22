@@ -6,9 +6,6 @@ on:
       project_name:
         required: true
         type: string
-      calling_repo:
-        required: true
-        type: string
 
 jobs:
   BuildTest:     
@@ -19,8 +16,12 @@ jobs:
     steps:      
     - name: Checkout repository
       uses: actions/checkout@v3
-      with: 
-        Repository: ${{ inputs.calling_repo }}
+      
+    - name: Checkout actions repository
+      uses: actions/checkout@v3
+      with:
+        repository: uwhealth-is/actions
+        path: ./.github/uwh-actions
 
     - name: Create publish directory
       shell: bash
@@ -47,6 +48,4 @@ jobs:
           ${{ github.workspace }}/publish/*.sql
           ${{ github.workspace }}/publish/*.rdl
           ${{ github.workspace }}/publish/*.rds
-      if: ${{ hashFiles('publish/*') != '' }}
-      
-# Checkout the repo - uses: actions/checkout@v3 with: # Repository name with owner. For example, actions/checkout Default: ${{ github.repository }}
+      if: ${{ hashFiles('publish/*') != '' }}      
