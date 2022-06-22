@@ -15,7 +15,6 @@ runs:
     uses: actions/checkout@v3
       with:
         repository: uwhealth-is/actions
-        path: ./.github/uwh-actions 
         
   - name: Create publish directory
     shell: bash
