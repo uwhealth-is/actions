@@ -52,6 +52,12 @@ runs:
   - name: Checkout repository
     uses: actions/checkout@v3
 
+  - name: Checkout actions repository
+    uses: actions/checkout@v3
+    with:
+      repository: uwhealth-is/actions
+      path: ./.github/uwh-actions
+      
   - name: Check for Azure Devops token to determine if telerik is needed in nuget feed
     id: azuredevops
     shell: bash
@@ -75,12 +81,6 @@ runs:
       dotnet nuget remove source ${{ inputs.telerik_feed_name }} --configfile ${{ inputs.nuget_config }}
       dotnet nuget add source ${{ inputs.telerik_feed_source }} -n ${{ inputs.telerik_feed_name }} -u ${{ inputs.telerik_user }} -p ${{ inputs.telerik_password }} --configfile ${{ inputs.nuget_config }} --store-password-in-clear-text
     if: steps.telerik.outputs.telerik_secret != ''
-
-  - name: Checkout actions repository
-    uses: actions/checkout@v3
-    with:
-      repository: uwhealth-is/actions
-      path: ./.github/uwh-actions 
                 
   - name: Set up JDK 11
     uses: actions/setup-java@v1
@@ -123,7 +123,7 @@ runs:
       
   - name: zip publish files
     shell: bash
-    run: zip -r ${{ github.workspace }}/build.zip ./
+    run: zip -r ${{ github.workspace }}/build.zip ${{ github.workspace }}
   
   - name: Upload Build Artifact
     if: success()
