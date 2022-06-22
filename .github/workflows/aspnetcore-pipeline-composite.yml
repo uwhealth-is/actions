@@ -25,15 +25,6 @@ on:
         required: false
 
 jobs:
-  checkout: 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout actions repository
-        uses: actions/checkout@v3
-        with:
-          repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -70,8 +61,7 @@ jobs:
       
   reportsandsql:
     name: Reports and SQL
-    needs: [checkout]
-    uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+    uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql.yml
     with:
       project_name: ${{ inputs.project_name }}
 
