@@ -24,7 +24,7 @@ on:
       telerik_password: 
         required: false
 
-jobs:
+jobs:    
   build:
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +33,7 @@ jobs:
         with:
           repository: uwhealth-is/actions
           path: ./.github/uwh-actions 
-
+          
       - name: Build / Test / Analyze
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
         with:
@@ -45,25 +45,49 @@ jobs:
           telerik_password: ${{ secrets.telerik_password }}  
             
   efmigrations:
-      name: Entity Framework Migrations
-      needs: [build]
-      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-efmigrations-ubuntu.yml
-      with:
-        project_name: ${{ inputs.project_name }}  
+    runs-on: windows-latest
+    needs: [build] 
+    steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+          
+      - name: Entity Framework Migrations
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-efmigrations
+        with:
+          project_name: ${{ inputs.project_name }}  
             
-  publish:
-      name: Publish
-      needs: [build]
-      uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish.yml
-      with:
-        project_name: ${{ inputs.project_name }}  
-        package_pat: ${{ secrets.package_pat }}
+  publish:  
+    runs-on: ubuntu-latest
+    needs: [build] 
+    steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+      
+      - name: Publish
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
+        with:
+          project_name: ${{ inputs.project_name }}  
+          package_pat: ${{ secrets.package_pat }}
       
   reportsandsql:
-    name: Reports and SQL
-    uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql.yml
-    with:
-      project_name: ${{ inputs.project_name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout actions repository
+        uses: actions/checkout@v3
+        with:
+          repository: uwhealth-is/actions
+          path: ./.github/uwh-actions 
+      
+      - name: Reports and SQL
+        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+        with:
+          project_name: ${{ inputs.project_name }}
 
   release: 
     runs-on: ubuntu-latest
