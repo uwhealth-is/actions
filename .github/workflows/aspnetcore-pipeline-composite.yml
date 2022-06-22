@@ -12,9 +12,6 @@ on:
       application_test_url:
         required: true
         type: string
-      calling_repo:
-        required: true
-        type: string
     secrets:
       ado_token:
         required: true
