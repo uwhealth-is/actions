@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
+          path: ${{ github.repository }}
           
       - name: Build / Test / Analyze
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
+          path: ${{ github.repository }}
           
       - name: Entity Framework Migrations
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-efmigrations
@@ -67,7 +67,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
+          path: ${{ github.repository }}
       
       - name: Publish
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
+          path: ${{ github.repository }}
       
       - name: Reports and SQL
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
@@ -97,7 +97,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
+          path: ${{ github.repository }}
       
       - name: Release
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
