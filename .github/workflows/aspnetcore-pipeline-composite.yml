@@ -88,7 +88,6 @@ jobs:
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
         with:
           project_name: ${{ inputs.project_name }}
-          calling_repo: ${{ inputs.calling_repo }}
 
   release: 
     runs-on: ubuntu-latest
