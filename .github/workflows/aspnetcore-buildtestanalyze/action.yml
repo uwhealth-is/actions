@@ -51,6 +51,12 @@ runs:
   steps:      
   - name: Checkout repository
     uses: actions/checkout@v3
+  
+  - name: Checkout actions repository
+    uses: actions/checkout@v3
+    with:
+      repository: uwhealth-is/actions
+      path: ./.github/uwh-actions
       
   - name: Check for Azure Devops token to determine if telerik is needed in nuget feed
     id: azuredevops
@@ -118,7 +124,7 @@ runs:
       
   - name: zip publish files
     shell: bash
-    run: zip -r ${{ github.workspace }}/build.zip ./
+    run: zip -r ${{ github.workspace }}/build.zip ./ -x .github -x .git -x .sonar -x .sonarcube
   
   - name: Upload Build Artifact
     if: success()
@@ -146,11 +152,3 @@ runs:
     with:
       scanMetadataReportFile: "${{github.workspace}}/.sonarqube/out/.sonar/report-task.txt"
     if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
-
-  # this has to be here for composite actions for some reason,
-  # or else the parent action doesnt know how to clean itself up properly in the Post Actions
-  - name: Checkout actions repository
-    uses: actions/checkout@v3
-    with:
-      repository: uwhealth-is/actions
-      path: ./.github/uwh-actions
