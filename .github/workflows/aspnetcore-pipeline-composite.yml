@@ -24,8 +24,8 @@ on:
       telerik_password: 
         required: false
 
-jobs:    
-  build:
+jobs:
+  checkout: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout actions repository
@@ -33,16 +33,17 @@ jobs:
         with:
           repository: uwhealth-is/actions
           path: ./.github/uwh-actions 
-          
-      - name: Build / Test / Analyze
-        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
-        with:
-          project_name: ${{ inputs.project_name }}  
-          ado_token: ${{ secrets.ado_token }}
-          sonar_token: ${{ secrets.sonar_token }}
-          package_pat: ${{ secrets.package_pat }}
-          telerik_user: ${{ secrets.telerik_user }}
-          telerik_password: ${{ secrets.telerik_password }}  
+
+  build:          
+    name: Build / Test / Analyze
+    uses: ./.github/uwh-actions/.github/workflows/aspnetcore-buildtestanalyze
+    with:
+      project_name: ${{ inputs.project_name }}  
+      ado_token: ${{ secrets.ado_token }}
+      sonar_token: ${{ secrets.sonar_token }}
+      package_pat: ${{ secrets.package_pat }}
+      telerik_user: ${{ secrets.telerik_user }}
+      telerik_password: ${{ secrets.telerik_password }}  
             
   efmigrations:
     runs-on: windows-latest
@@ -76,18 +77,11 @@ jobs:
           package_pat: ${{ secrets.package_pat }}
       
   reportsandsql:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout actions repository
-        uses: actions/checkout@v3
-        with:
-          repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
-      
-      - name: Reports and SQL
-        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
-        with:
-          project_name: ${{ inputs.project_name }}
+    name: Reports and SQL
+    needs: [checkout]
+    uses: ./.github/uwh-actions/.github/workflows/aspnetcore-reportsandsql
+    with:
+      project_name: ${{ inputs.project_name }}
 
   release: 
     runs-on: ubuntu-latest
