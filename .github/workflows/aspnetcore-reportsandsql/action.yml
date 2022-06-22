@@ -10,11 +10,12 @@ runs:
   steps:      
   - name: Checkout repository
     uses: actions/checkout@v3
-
-  - name: Checkout repository
+    
+  - name: Checkout actions repository
     uses: actions/checkout@v3
-      with:
-        repository: uwhealth-is/actions
+    with:
+      repository: uwhealth-is/actions
+      path: ./.github/uwh-actions 
         
   - name: Create publish directory
     shell: bash
