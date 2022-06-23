@@ -39,6 +39,7 @@ runs:
       npm install
       npm i --location=global grunt
       grunt
+    if: ${{ hashFiles('**/package.json') != '' }}
     
   - name: dotnet publish
     shell: bash
