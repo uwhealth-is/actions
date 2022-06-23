@@ -124,7 +124,7 @@ jobs:
       uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
       with:
         project_name: ${{ inputs.project_name }}
-        full_solution_build: false
+        #full_solution_build: false
         
     - name: zip publish files
       shell: bash
