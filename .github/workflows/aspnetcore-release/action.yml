@@ -33,6 +33,7 @@ runs:
         pushd ${{ github.workspace }}/reports
         zip -r ${{ github.workspace }}/reports.zip ./
         popd
+      if: ${{ hashFiles(format({0}/reports/*, github.workspace)) != '' }}
     
     - name: Copy sql files to procedures directory
       shell: bash
@@ -47,7 +48,8 @@ runs:
       run: |
         pushd ${{ github.workspace }}/procedures
         zip -r ${{ github.workspace }}/procedures.zip ./
-        popd      
+        popd
+      if: ${{ hashFiles(format({0}/procedures/*, github.workspace)) != '' }}
    
     - name: Create Release
       id: create_release
@@ -82,7 +84,8 @@ runs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  
         asset_path: ${{ github.workspace }}/reports.zip
         asset_name: reports.zip
-        asset_content_type: application/zip   
+        asset_content_type: application/zip
+      if: ${{ hashFiles(format({0}/reports.zip github.workspace)) != '' }}
     
     - name: Upload Procedures Release Asset
       if: success()
@@ -95,7 +98,8 @@ runs:
         asset_path: ${{ github.workspace }}/procedures.zip
         asset_name: procedures.zip
         asset_content_type: application/zip
-        
+      if: ${{ hashFiles(format({0}/procedures.zip, github.workspace)) != '' }}
+      
     - name: Upload Migration Release Asset
       if: success()
       id: upload-migration-release-asset 
@@ -107,6 +111,7 @@ runs:
         asset_path: ${{ github.workspace }}/efmigrations.sql
         asset_name: efmigrations.sql
         asset_content_type: application/sql
+      if: ${{ hashFiles(format({0}/efmigrations.sql, github.workspace)) != '' }}
         
     - name: Mark Release as published
       if: success()
