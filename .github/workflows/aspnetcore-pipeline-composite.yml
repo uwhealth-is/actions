@@ -104,6 +104,7 @@ jobs:
         with:
           project_name: ${{ inputs.project_name }}
           ado_token: ${{ secrets.ado_token }}
+          github_token: ${{ secrets.github_token }}
       
   deployment-development:
     runs-on: ubuntu-latest
