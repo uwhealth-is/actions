@@ -57,7 +57,6 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ github.ref_name }}.${{ github.run_number }}
         release_name: ${{ github.ref_name }}.${{ github.run_number }}
         draft: true
         prerelease: false
