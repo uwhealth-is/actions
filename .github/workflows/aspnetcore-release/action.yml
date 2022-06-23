@@ -33,7 +33,7 @@ runs:
         pushd ${{ github.workspace }}/reports
         zip -r ${{ github.workspace }}/reports.zip ./
         popd
-      if: ${{ hashFiles(format({0}/reports/*, github.workspace)) != '' }}
+      if: ${{ hashFiles(format('{0}/reports/*', github.workspace)) != '' }}
     
     - name: Copy sql files to procedures directory
       shell: bash
@@ -49,7 +49,7 @@ runs:
         pushd ${{ github.workspace }}/procedures
         zip -r ${{ github.workspace }}/procedures.zip ./
         popd
-      if: ${{ hashFiles(format({0}/procedures/*, github.workspace)) != '' }}
+      if: ${{ hashFiles(format('{0}/procedures/*', github.workspace)) != '' }}
    
     - name: Create Release
       id: create_release
@@ -75,7 +75,6 @@ runs:
         asset_content_type: application/zip
     
     - name: Upload Reports Release Asset
-      if: success()
       id: upload-report-release-asset 
       uses: actions/upload-release-asset@v1
       env:
@@ -85,10 +84,9 @@ runs:
         asset_path: ${{ github.workspace }}/reports.zip
         asset_name: reports.zip
         asset_content_type: application/zip
-      if: ${{ hashFiles(format({0}/reports.zip github.workspace)) != '' }}
+      if: ${{ success() && hashFiles(format('{0}/reports.zip', github.workspace)) != '' }}
     
     - name: Upload Procedures Release Asset
-      if: success()
       id: upload-procedure-release-asset 
       uses: actions/upload-release-asset@v1
       env:
@@ -98,10 +96,9 @@ runs:
         asset_path: ${{ github.workspace }}/procedures.zip
         asset_name: procedures.zip
         asset_content_type: application/zip
-      if: ${{ hashFiles(format({0}/procedures.zip, github.workspace)) != '' }}
+      if: ${{ success() && hashFiles(format('{0}/procedures.zip', github.workspace)) != '' }}
       
     - name: Upload Migration Release Asset
-      if: success()
       id: upload-migration-release-asset 
       uses: actions/upload-release-asset@v1
       env:
@@ -111,7 +108,7 @@ runs:
         asset_path: ${{ github.workspace }}/efmigrations.sql
         asset_name: efmigrations.sql
         asset_content_type: application/sql
-      if: ${{ hashFiles(format({0}/efmigrations.sql, github.workspace)) != '' }}
+      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
         
     - name: Mark Release as published
       if: success()
