@@ -6,6 +6,9 @@ on:
       project_name:
         required: true
         type: string
+      project_root_name:
+        required: false
+        type: string
       application_dev_url: 
         required: true
         type: string
@@ -58,6 +61,7 @@ jobs:
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-efmigrations
         with:
           project_name: ${{ inputs.project_name }}  
+          project_root_name: ${{ inputs.project_root_name }}  
             
   publish:  
     runs-on: ubuntu-latest
