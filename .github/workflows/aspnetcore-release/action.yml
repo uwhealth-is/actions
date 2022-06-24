@@ -85,13 +85,13 @@ runs:
       with:
         node-version: 'lts/*'
         
-    - name: Install dependencies
+    - name: Install semantic release
       shell: bash
-      run: npx semantic-release
+      run: npm install --save-dev semantic-release
       
     - name: Install semantic-release extra plugins
       shell: bash
-      run: npm install --save-dev @semantic-release/commit-analyzer @semantic-release/changelog @semantic-release/release-notes-generator @semantic-release/github @semantic-release/git      
+      run: npm install @semantic-release/git @semantic-release/changelog -D
 
     - name: Release
       env:
