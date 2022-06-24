@@ -107,7 +107,6 @@ jobs:
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
         with:
           project_name: ${{ inputs.project_name }}
-          ado_token: ${{ secrets.ado_token }}
           github_token: ${{ secrets.github_token }}
       
   deployment-development:
