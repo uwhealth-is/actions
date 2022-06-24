@@ -23,9 +23,6 @@ runs:
       mkdir reports
       cd ${{ inputs.project_name }}.Reports
       cp -r *.rdl ${{ github.workspace }}/reports || :
-      pushd ${{ github.workspace }}/reports
-      zip -r ${{ github.workspace }}/reports.zip ./
-      popd
     if: ${{ hashFiles(format('{0}.Reports/**/*.rdl', inputs.project_name)) != '' }}
     
   - name: Copy sql files to publish directory
@@ -34,21 +31,18 @@ runs:
       mkdir procedures
       cd ${{ inputs.project_name }}.Data
       cp -r **/*.sql ${{ github.workspace }}/procedures || :
-      pushd ${{ github.workspace }}/procedures
-      zip -r ${{ github.workspace }}/procedures.zip ./
-      popd
     if: ${{ hashFiles(format('{0}.Data/**/*.sql', inputs.project_name)) != '' }}
                     
-  - name: Upload reports.zip as Build Artifact
+  - name: Upload procedures as Build Artifact
     uses: actions/upload-artifact@v3.1.0
     with:
-      name: artifact
-      path: reports.zip
-    if: ${{ hashFiles('reports.zip') != '' }}
+      name: procedures
+      path: ${{ github.workspace }}/procedures/*.sql
+    if: ${{ hashFiles('procedures/*') != '' }}
     
-  - name: Upload procedures.zip as Build Artifact
+  - name: Upload reports as Build Artifact
     uses: actions/upload-artifact@v3.1.0
     with:
-      name: artifact
-      path: ${{ github.workspace }}/procedures.zip
-    if: ${{ hashFiles('procedures.zip') != '' }}
+      name: reports
+      path: ${{ github.workspace }}/reports/*.rdl
+    if: ${{ hashFiles('reports/*') != '' }}
