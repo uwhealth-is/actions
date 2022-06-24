@@ -18,8 +18,8 @@ runs:
     - name: Download build Artifact
       uses: actions/download-artifact@v3
       with:
-        name: artifact   
-   
+        name: artifact
+         
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -54,7 +54,31 @@ runs:
         asset_name: efmigrations.sql
         asset_content_type: application/sql
       if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
-        
+
+    - name: Upload Reports Release Asset
+      id: upload-migration-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/efmigrations.sql
+        asset_name: efmigrations.sql
+        asset_content_type: application/sql
+      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
+
+    - name: Upload Procedures Release Asset
+      id: upload-migration-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/efmigrations.sql
+        asset_name: efmigrations.sql
+        asset_content_type: application/sql
+      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
+            
     - name: Mark Release as published
       if: success()
       uses: eregon/publish-release@v1
