@@ -90,9 +90,11 @@ runs:
         node-version: 'lts/*'
         
     - name: Install dependencies
+      shell: bash
       run: npx semantic-release
       
     - name: Install semantic-release extra plugins
+      shell: bash
       run: npm install --save-dev @semantic-release/commit-analyzer @semantic-release/release-notes-generator @semantic-release/github @semantic-release/git      
 
     - name: Release
