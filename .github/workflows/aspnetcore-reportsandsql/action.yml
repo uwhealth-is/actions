@@ -26,15 +26,14 @@ runs:
     run: |
       cd ${{ inputs.project_name }}.Reports
       cp -r *.rdl ${{ github.workspace }}/publish || :
-      cp -r *.rds ${{ github.workspace }}/publish || :
-    if: ${{ hashFiles(format('{0}.Reports/*', inputs.project_name)) != '' }}
+    if: ${{ hashFiles(format('{0}.Reports/**/*.rdl', inputs.project_name)) != '' }}
     
   - name: Copy sql files to publish directory
     shell: bash
     run: |
       cd ${{ inputs.project_name }}.Data
       cp -r **/*.sql ${{ github.workspace }}/publish || :
-    if: ${{ hashFiles(format('{0}.Data/*', inputs.project_name)) != '' }}
+    if: ${{ hashFiles(format('{0}.Data/**/*.sql', inputs.project_name)) != '' }}
   
   - name: Upload files as Build Artifacts
     uses: actions/upload-artifact@v3.1.0
@@ -43,5 +42,4 @@ runs:
       path: |
         ${{ github.workspace }}/publish/*.sql
         ${{ github.workspace }}/publish/*.rdl
-        ${{ github.workspace }}/publish/*.rds
-    if: ${{ hashFiles('publish/*') != '' }}
+     if: ${{ hashFiles('publish/*') != '' }}
