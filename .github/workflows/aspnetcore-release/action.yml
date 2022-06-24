@@ -22,12 +22,12 @@ runs:
         
     - name: Set tag value Development
       shell: bash
-      run: echo "tag_valuee=Development" >> $GITHUB_ENV
+      run: echo "tag_value=Development" >> $GITHUB_ENV
       if: ${{ github.ref_name != 'main' }}  
 
     - name: Set tag value Production
       shell: bash
-      run: echo "tag_valuee=Production" >> $GITHUB_ENV
+      run: echo "tag_value=Production" >> $GITHUB_ENV
       if: ${{ github.ref_name == 'main' }}         
         
     - name: Create Release
