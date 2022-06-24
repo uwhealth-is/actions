@@ -9,12 +9,6 @@ inputs:
 runs:
   using: "composite"
   steps: 
-    - name: Checkout actions repository
-      uses: actions/checkout@v3
-      with:
-        repository: uwhealth-is/actions
-        path: ./.github/uwh-actions
-      
     - name: Download build Artifact
       uses: actions/download-artifact@v3
       with:
@@ -104,3 +98,10 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github_token }}
       shell: bash
       run: npx semantic-release
+      
+    - name: Checkout actions repository
+      uses: actions/checkout@v3
+      with:
+        repository: uwhealth-is/actions
+        path: ./.github/uwh-actions
+      
