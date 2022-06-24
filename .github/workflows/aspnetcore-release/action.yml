@@ -21,10 +21,12 @@ runs:
         name: artifact
         
     - name: Set tag value Development
+      shell: bash
       run: echo "tag_valuee=Development" >> $GITHUB_ENV
       if: ${{ github.ref_name != 'main' }}  
 
     - name: Set tag value Production
+      shell: bash
       run: echo "tag_valuee=Production" >> $GITHUB_ENV
       if: ${{ github.ref_name == 'main' }}         
         
