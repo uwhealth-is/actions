@@ -62,10 +62,10 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github_token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/efmigrations.sql
-        asset_name: efmigrations.sql
-        asset_content_type: application/sql
-      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
+        asset_path: ${{ github.workspace }}/reports.zip
+        asset_name: reports.zip
+        asset_content_type: application/zip
+      if: ${{ success() && hashFiles(format('{0}/reports.zip', github.workspace)) != '' }}
 
     - name: Upload Procedures Release Asset
       id: upload-migration-release-asset 
@@ -74,10 +74,10 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github_token }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/efmigrations.sql
-        asset_name: efmigrations.sql
-        asset_content_type: application/sql
-      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
+        asset_path: ${{ github.workspace }}/procedures.zip
+        asset_name: procedures.zip
+        asset_content_type: application/zip
+      if: ${{ success() && hashFiles(format('{0}/procedures.zip', github.workspace)) != '' }}
             
     - name: Mark Release as published
       if: success()
