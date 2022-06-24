@@ -19,37 +19,6 @@ runs:
       uses: actions/download-artifact@v3
       with:
         name: artifact   
-    
-    - name: Copy report files to reports directory
-      shell: bash
-      run: |
-        mkdir reports
-        cp -r *.rdl ${{ github.workspace }}/reports || :
-        cp -r *.rds ${{ github.workspace }}/reports || :
-
-    - name: zip report files
-      shell: bash
-      run: |
-        pushd ${{ github.workspace }}/reports
-        zip -r ${{ github.workspace }}/reports.zip ./
-        popd
-      if: ${{ hashFiles(format('{0}/reports/*', github.workspace)) != '' }}
-    
-    - name: Copy sql files to procedures directory
-      shell: bash
-      run: |
-        mkdir procedures
-        cp -r *.sql ${{ github.workspace }}/procedures || :
-        cd procedures
-        cp -r efmigrations.sql ${{ github.workspace }} || : 
-        
-    - name: zip procedure files
-      shell: bash
-      run: |
-        pushd ${{ github.workspace }}/procedures
-        zip -r ${{ github.workspace }}/procedures.zip ./
-        popd
-      if: ${{ hashFiles(format('{0}/procedures/*', github.workspace)) != '' }}
    
     - name: Create Release
       id: create_release
@@ -73,31 +42,7 @@ runs:
         asset_path: ${{ github.workspace }}/artifact.zip
         asset_name: artifact.zip
         asset_content_type: application/zip
-    
-    - name: Upload Reports Release Asset
-      id: upload-report-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/reports.zip
-        asset_name: reports.zip
-        asset_content_type: application/zip
-      if: ${{ success() && hashFiles(format('{0}/reports.zip', github.workspace)) != '' }}
-    
-    - name: Upload Procedures Release Asset
-      id: upload-procedure-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/procedures.zip
-        asset_name: procedures.zip
-        asset_content_type: application/zip
-      if: ${{ success() && hashFiles(format('{0}/procedures.zip', github.workspace)) != '' }}
-      
+          
     - name: Upload Migration Release Asset
       id: upload-migration-release-asset 
       uses: actions/upload-release-asset@v1
