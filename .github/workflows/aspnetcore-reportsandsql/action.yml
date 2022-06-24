@@ -42,4 +42,4 @@ runs:
       path: |
         ${{ github.workspace }}/publish/*.sql
         ${{ github.workspace }}/publish/*.rdl
-     if: ${{ hashFiles('publish/*') != '' }}
+    if: ${{ hashFiles('publish/*') != '' }}
