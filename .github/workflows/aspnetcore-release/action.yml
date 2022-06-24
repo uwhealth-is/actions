@@ -19,76 +19,83 @@ runs:
       uses: actions/download-artifact@v3
       with:
         name: artifact
+                    
+#    - name: Create Release
+#      id: create_release
+#      uses: actions/create-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }} # This token is provided by Actions, you do not need to create your own token
+#      with:
+#        tag_name: ${{ github.ref_name }}.${{ github.run_id }}
+#        release_name: ${{ github.ref_name }}.${{ github.run_id }}
+#        draft: true
+#        prerelease: false
+#    
+#    - name: Upload Build Release Assets
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+#        asset_path: ${{ github.workspace }}/artifact.zip
+#        asset_name: artifact.zip
+#        asset_content_type: application/zip
+#      if: success()
+#          
+#    - name: Upload Migration Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+#        asset_path: ${{ github.workspace }}/efmigrations.sql
+#        asset_name: efmigrations.sql
+#        asset_content_type: application/sql
+#      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
+#
+#    - name: Upload Reports Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+#        asset_path: ${{ github.workspace }}/reports.zip
+#        asset_name: reports.zip
+#        asset_content_type: application/zip
+#      if: ${{ success() && hashFiles(format('{0}/reports.zip', github.workspace)) != '' }}
+#
+#    - name: Upload Procedures Release Asset
+#      uses: actions/upload-release-asset@v1
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#      with:
+#        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+#        asset_path: ${{ github.workspace }}/procedures.zip
+#        asset_name: procedures.zip
+#        asset_content_type: application/zip
+#      if: ${{ success() && hashFiles(format('{0}/procedures.zip', github.workspace)) != '' }}
+#            
+#    - name: Mark Release as published
+#      if: success()
+#      uses: eregon/publish-release@v1
+#      env:
+#        GITHUB_TOKEN: ${{ inputs.github_token }}
+#      with:
+#        release_id: ${{ steps.create_release.outputs.id }}
         
-    - name: Set tag value Development
-      shell: bash
-      run: echo "tag_value=Development" >> $GITHUB_ENV
-      if: ${{ github.ref_name != 'main' }}  
-
-    - name: Set tag value Production
-      shell: bash
-      run: echo "tag_value=Production" >> $GITHUB_ENV
-      if: ${{ github.ref_name == 'main' }}         
         
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }} # This token is provided by Actions, you do not need to create your own token
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
       with:
-        tag_name: ${{ env.tag_value }} 
-        release_name: ${{ github.ref_name }}.${{ github.run_id }}
-        draft: true
-        prerelease: false
-    
-    - name: Upload Build Release Assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/artifact.zip
-        asset_name: artifact.zip
-        asset_content_type: application/zip
-      if: success()
-          
-    - name: Upload Migration Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/efmigrations.sql
-        asset_name: efmigrations.sql
-        asset_content_type: application/sql
-      if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
+        node-version: 'lts/*'
+        
+    - name: Install dependencies
+      run: npx semantic-release
+      
+    - name: Install semantic-release extra plugins
+      run: npm install --save-dev @semantic-release/changelog @semantic-release/git      
 
-    - name: Upload Reports Release Asset
-      uses: actions/upload-release-asset@v1
+    - name: Release
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/reports.zip
-        asset_name: reports.zip
-        asset_content_type: application/zip
-      if: ${{ success() && hashFiles(format('{0}/reports.zip', github.workspace)) != '' }}
-
-    - name: Upload Procedures Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}  
-        asset_path: ${{ github.workspace }}/procedures.zip
-        asset_name: procedures.zip
-        asset_content_type: application/zip
-      if: ${{ success() && hashFiles(format('{0}/procedures.zip', github.workspace)) != '' }}
-            
-    - name: Mark Release as published
-      if: success()
-      uses: eregon/publish-release@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-      with:
-        release_id: ${{ steps.create_release.outputs.id }}
+      run: npx semantic-release
