@@ -115,14 +115,14 @@ jobs:
       name: Development
       url: ${{ inputs.application_dev_url }}
     needs: [release]
-    if: ${{ github.ref_name != 'main' }}
+    if: ${{ github.ref_name != 'main' && steps.semantic.outputs.new_release_published == 'true' }}
     steps:
       - name: Azure Pipelines Action
         uses: Azure/pipelines@v1.2
         with:
           azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
           azure-pipeline-name: '${{ inputs.project_name }}_Development'
-          azure-pipeline-variables: '{"AppSettings.Version": "${{ github.run_number }}", "AppSettings.Environment": "Development"}'
+          azure-pipeline-variables: '{"AppSettings.Version": "${{ steps.semantic.outputs.new_release_version }}", "AppSettings.Environment": "Development"}'
           azure-devops-token: '${{ secrets.ado_token }}'
         
   deployment-test:  
@@ -131,12 +131,12 @@ jobs:
       name: Test
       url: ${{ inputs.application_test_url }}   
     needs: [release]
-    if: ${{ github.ref_name == 'main' }}    
+    if: ${{ github.ref_name == 'main' && steps.semantic.outputs.new_release_published == 'true' }}    
     steps:
       - name: Azure Pipelines Action
         uses: Azure/pipelines@v1.2
         with:
           azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
           azure-pipeline-name: '${{ inputs.project_name }}_Production'
-          azure-pipeline-variables: '{"AppSettings.Version": "${{ github.run_number }}", "AppSettings.Environment": "Test"}'
+          azure-pipeline-variables: '{"AppSettings.Version": "${{ steps.semantic.outputs.new_release_version }}", "AppSettings.Environment": "Test"}'
           azure-devops-token: '${{ secrets.ado_token }}'
