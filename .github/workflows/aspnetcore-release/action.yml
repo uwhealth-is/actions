@@ -8,12 +8,7 @@ inputs:
 
 runs:
   using: "composite"
-  steps: 
-    - name: Download build Artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: artifact
-                    
+  steps:                    
 #    - name: Create Release
 #      id: create_release
 #      uses: actions/create-release@v1
@@ -79,6 +74,11 @@ runs:
         
     - name: Checkout repository
       uses: actions/checkout@v3
+    
+    - name: Download build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: artifact
     
     - name: Setup Node.js
       uses: actions/setup-node@v2
