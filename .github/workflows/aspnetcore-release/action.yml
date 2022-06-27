@@ -21,21 +21,7 @@ runs:
       id: semantic
       uses: cycjimmy/semantic-release-action@v3
       with:
-        semantic_version: 19.0.*
-        branches: |
-           [
-             {
-			         "name": "main"
-		         },
-		         {
-			         "name": "feature/*",
-			         "prerelease": true
-		         },
-		         {
-			         "name": "bug/*",
-			         "prerelease": true
-		         }
-	         ]
+        semantic_version: 19.0.*       
         extra_plugins: |
           @semantic-release/git 
           @semantic-release/changelog
