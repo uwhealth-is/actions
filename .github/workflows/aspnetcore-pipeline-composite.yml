@@ -100,17 +100,25 @@ jobs:
       new_release_published:  ${{ steps.semantic.outputs.new_release_published }}
       new_release_version: ${{ steps.semantic.outputs.new_release_version }}
     steps:
-      - name: Checkout actions repository
+      - name: Checkout repository
         uses: actions/checkout@v3
+    
+      - name: Download build Artifact
+        uses: actions/download-artifact@v3
         with:
-          repository: uwhealth-is/actions
-          path: ./.github/uwh-actions 
+          name: artifact
+         
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 19.0.*       
+          extra_plugins: |
+            @semantic-release/git 
+            @semantic-release/changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Release
-        uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
-        with:
-          project_name: ${{ inputs.project_name }}
-          github_token: ${{ secrets.github_token }}
       
   deployment-development:
     runs-on: ubuntu-latest
