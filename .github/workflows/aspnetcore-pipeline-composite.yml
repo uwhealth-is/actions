@@ -133,7 +133,7 @@ jobs:
         with:
           azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
           azure-pipeline-name: '${{ inputs.project_name }}_Development'
-          azure-pipeline-variables: '{"AppSettings.Version": "${{ needs.release.outputs.new_release_version }}", "AppSettings.Environment": "Development"}'
+          azure-pipeline-variables: '{"AppSettings.Version": "v${{ needs.release.outputs.new_release_version }}", "AppSettings.Environment": "Development"}'
           azure-devops-token: '${{ secrets.ado_token }}'
         
   deployment-test:  
