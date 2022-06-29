@@ -115,6 +115,7 @@ jobs:
         with:
           project_name: ${{ inputs.project_name }}
           version: ${{ steps.version.output.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       
       
   deployment-development:
