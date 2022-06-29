@@ -3,6 +3,8 @@ name: ASP.NET Core Release
 inputs:
   project_name:
     required: true
+  version:
+    required: true
   github_token:
     required: true
 
@@ -57,8 +59,8 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ github.ref_name }}.${{ github.run_id }} #required...
-        release_name: ${{ github.ref_name }}.${{ github.run_id }}
+        tag_name: ${{ inputs.version }} #required...
+        release_name: ${{ inputs.version }}
         draft: true
         prerelease: false
     
