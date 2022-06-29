@@ -44,19 +44,19 @@ runs:
       grunt
     if: ${{ hashFiles('**/package.json') != '' }}
     
+  - name: App Settings Variable Substitution
+    uses: microsoft/variable-substitution@v1
+    with:
+      files: '${{ inputs.project_name }}/appsettings.json'
+    env:
+      AppSettings.Version: ${{ inputs.version }}
+    
   - name: dotnet publish
     shell: bash
     run: |
       dotnet restore --configfile ${{ inputs.nuget_config }}
       cd ${{ inputs.project_name }}
-      dotnet publish --configuration Release -o ${{ github.workspace }}/publish
-  
-  - name: App Settings Variable Substitution
-    uses: microsoft/variable-substitution@v1
-    with:
-      files: ' ${{ github.workspace }}/publish/appsettings.json'
-    env:
-      AppSettings.Version: ${{ inputs.version }}
+      dotnet publish --configuration Release -o ${{ github.workspace }}/publish  
   
   - name: zip publish files
     shell: bash
