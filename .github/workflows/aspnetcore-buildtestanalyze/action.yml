@@ -3,7 +3,11 @@ name: ASP.NET Build / Test / Analyze
 inputs:
   project_name:
     required: true
-    type: string   
+    type: string
+  full_solution_build:
+    required: false
+    type: bool
+    default: false
   ado_token:
     required: true
   sonar_token:
@@ -120,7 +124,7 @@ runs:
     uses: ./.github/uwh-actions/.github/workflows/aspnetcore-build
     with:
       project_name: ${{ inputs.project_name }}
-      full_solution_build: false
+      full_solution_build: ${{ inputs.full_solution_build }}
       
   - name: zip publish files
     shell: bash
