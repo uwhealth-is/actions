@@ -19,6 +19,10 @@ on:
         required: false
         type: boolean
         default: false
+      console_project_name:
+        required: false
+        type: string
+        default: ''
     secrets:
       ado_token:
         required: true
@@ -89,7 +93,8 @@ jobs:
         with:
           project_name: ${{ inputs.project_name }}  
           package_pat: ${{ secrets.package_pat }}
-          version: ${{ steps.version.outputs.version }}         
+          version: ${{ steps.version.outputs.version }}
+          console_project_name: ${{ inputs.console_project_name }}
       
   reportsandsql:     
     runs-on: ubuntu-latest
@@ -135,7 +140,7 @@ jobs:
         with:
           azure-devops-project-url: 'https://dev.azure.com/uwhealth/SoftwareDevelopment'
           azure-pipeline-name: '${{ inputs.project_name }}_Development'
-          azure-pipeline-variables: '{"Version": "${{ needs.publish.outputs.version }}", "AppSettings.Environment": "Development"}'
+          azure-pipeline-variables: '{"AppSettings.Environment": "Development"}'
           azure-devops-token: '${{ secrets.ado_token }}'
         
   deployment-test:  
