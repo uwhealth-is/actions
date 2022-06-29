@@ -15,6 +15,10 @@ on:
       application_test_url:
         required: true
         type: string
+      full_solution_build:
+        required: false
+        type: boolean
+        default: false
     secrets:
       ado_token:
         required: true
