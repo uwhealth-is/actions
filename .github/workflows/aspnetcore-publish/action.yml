@@ -9,6 +9,10 @@ inputs:
     type: string
   package_pat:
     required: true
+  console_project_name:
+    required: false
+    default: ''
+    type: string
   nuget_config: 
     required: false
     default: 'Nuget.config'
@@ -51,23 +55,36 @@ runs:
     env:
       AppSettings.Version: ${{ inputs.version }}
     
-  - name: dotnet publish
+  - name: web app publish and zip
     shell: bash
     run: |
       dotnet restore --configfile ${{ inputs.nuget_config }}
       cd ${{ inputs.project_name }}
       dotnet publish --configuration Release -o ${{ github.workspace }}/publish  
-  
-  - name: zip publish files
-    shell: bash
-    run: |
       pushd ${{ github.workspace }}/publish
       zip -r ${{ github.workspace }}/artifact.zip ./
       popd
+ 
+  - name: dotnet publish and zip
+    if: ${{ inputs.console_project_name != '' }}
+    shell: bash
+    run: |
+      cd ${{ inputs.console_project_name }}
+      dotnet publish --configuration Release -o ${{ github.workspace }}/consolepublish  
+      pushd ${{ github.workspace }}/consolepublish
+      zip -r ${{ github.workspace }}/consoleartifact.zip ./
+      popd
   
-  - name: Upload Build Artifact
+  - name: Upload Web App Build Artifact
     if: success()
     uses: actions/upload-artifact@v3
     with:
       name: artifact
       path: ${{ github.workspace }}/artifact.zip
+
+  - name: Upload Console App Build Artifact
+    if: ${{ hashFiles('consoleartifact.zip') != '' }}
+    uses: actions/upload-artifact@v3
+    with:
+      name: artifact
+      path: ${{ github.workspace }}/consoleartifact.zip
