@@ -75,10 +75,10 @@ jobs:
           repository: uwhealth-is/actions
           path: ./.github/uwh-actions 
 
-      - name: Get current date
+      - name: Get version as timestamp of publish
         id: version
         shell: bash
-        run: echo "::set-output name=version::$(date +'%Y-%m-%dT%H:%M:%S')"
+        run: echo "::set-output name=version::$(date +'%Y%m%d.%H%M%S')"
 
       - name: Publish
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-publish
