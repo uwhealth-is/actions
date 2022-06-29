@@ -115,7 +115,8 @@ jobs:
         uses: ./.github/uwh-actions/.github/workflows/aspnetcore-release
         with:
           project_name: ${{ inputs.project_name }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}      
+          github_token: ${{ secrets.GITHUB_TOKEN }}   
+          version: ${{ needs.publish.outputs.version }}
       
   deployment-development:
     runs-on: ubuntu-latest
