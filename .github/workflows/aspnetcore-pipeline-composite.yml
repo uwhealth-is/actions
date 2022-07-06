@@ -23,6 +23,14 @@ on:
         required: false
         type: string
         default: ''
+      run_efmigrations_step: 
+        required: false
+        type: boolean
+        default: true
+      run_reportsandsql_step: 
+        required: false
+        type: boolean
+        default: true
     secrets:
       ado_token:
         required: true
@@ -56,6 +64,7 @@ jobs:
           telerik_password: ${{ secrets.telerik_password }}  
             
   efmigrations:
+    if: inputs.run_efmigrations_step == true
     runs-on: windows-latest
     needs: [build] 
     steps:
@@ -96,7 +105,8 @@ jobs:
           version: ${{ steps.version.outputs.version }}
           console_project_name: ${{ inputs.console_project_name }}
       
-  reportsandsql:     
+  reportsandsql:
+    if: inputs.run_reportsandsql_step == true    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout actions repository
