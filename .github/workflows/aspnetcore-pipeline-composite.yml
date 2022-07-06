@@ -144,7 +144,7 @@ jobs:
       name: Development
       url: ${{ inputs.application_dev_url }}
     needs: [release]
-    if: ${{ github.ref_name != 'main' }}
+    if: ${{ always() && github.ref_name != 'main' }}
     steps:
       - name: Azure Pipelines Action
         uses: Azure/pipelines@v1.2
@@ -160,7 +160,7 @@ jobs:
       name: Test
       url: ${{ inputs.application_test_url }}   
     needs: [release]
-    if: ${{ github.ref_name == 'main' }}    
+    if: ${{ always() && github.ref_name == 'main' }}    
     steps:
       - name: Azure Pipelines Action
         uses: Azure/pipelines@v1.2
