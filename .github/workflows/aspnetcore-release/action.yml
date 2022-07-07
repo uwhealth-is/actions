@@ -112,6 +112,18 @@ runs:
         asset_content_type: application/sql
       if: ${{ success() && hashFiles(format('{0}/efmigrations.sql', github.workspace)) != '' }}
         
+    - name: Upload Console Artifact Release Asset
+      id: upload-consoleartifact-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  
+        asset_path: ${{ github.workspace }}/consoleartifact.zip
+        asset_name: consoleartifact.zip
+        asset_content_type: application/zip
+      if: ${{ success() && hashFiles(format('{0}/consoleartifact.zip', github.workspace)) != '' }}
+      
     - name: Mark Release as published
       if: success()
       uses: eregon/publish-release@v1
