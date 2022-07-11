@@ -17,6 +17,9 @@ inputs:
     required: false
     default: 'Nuget.config'
     type: string
+env:
+  Environment: ''
+  type: string
 
 runs:
   using: "composite" 
@@ -36,6 +39,16 @@ runs:
   - name: Unzip build
     shell: bash
     run: unzip build.zip
+  
+  - name: Set Environment to Development
+    if: github.ref_name != 'main'
+    shell: bash
+    run: echo "Environment=Development" >> $GITHUB_ENV
+
+  - name: Set Environment to Test
+    if: github.ref_name == 'main'
+    shell: bash
+    run: echo "Environment=Test" >> $GITHUB_ENV
 
   - name: Restore client side packages
     shell: bash
@@ -54,6 +67,7 @@ runs:
       files: '${{ inputs.project_name }}/appsettings.json'
     env:
       AppSettings.Version: ${{ inputs.version }}
+      AppSettings.Environment: ${{ env.Environment }}
     
   - name: web app publish and zip
     shell: bash
